@@ -1,0 +1,225 @@
+<html lang="en">
+
+<head>
+    <title>Forvia - Home</title>
+    <meta charset="UTF-8">
+    <meta name="author" content="courage">
+    <link rel="stylesheet" href="css/Proyecto.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
+</head>
+<style>
+    .button-5 {
+    align-items: center;
+    background-clip: padding-box;
+    background-color: #FA0057;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    justify-content: center;
+    line-height: 1.25;
+    margin: 20px;
+    min-height: 3rem;
+    padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+    position: relative;
+    text-decoration: none;
+    transition: all 250ms;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: baseline;
+    width: auto;
+  }
+  
+  .button-5:hover,
+  .button-5:focus {
+    background-color: #ff2f78;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+  }
+  
+  .button-5:hover {
+    transform: translateY(-1px);
+  }
+    * {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Kanit', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+    font-weight: bold;
+    color: #337ab7;
+    margin-top: 50px;
+    font-size: 3em;
+}
+
+#inicio {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    height: 68vh;
+    width: 100%;
+}
+
+
+footer {
+    background-color:#e3e3e3;
+    bottom: 0;
+    width: 100%;
+}
+
+footer p {
+    margin: 0;
+    padding: 12px;
+    color: #337ab7;
+}
+
+footer .container {
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+
+footer a {
+    text-align: center;
+    text-decoration: none;
+}
+
+.video-background {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.video-background video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: 1080;
+    z-index: -100;
+    transform: translateX(-50%) translateY(-50%);
+}
+    h1{
+    font-size: 60px;
+    display: flex;
+    margin: 40px;
+    margin-top: 10%;
+    color:  white;
+    align-items: center;   
+        justify-content: center;
+}
+
+    @media (max-height: 768px) {
+    h1 {
+        font-size: 45px;
+        display: flex;
+        margin-top: 15%;
+        color:  white;
+        align-items: center;
+    }
+
+    
+  }
+
+  @media (max-width: 700px)  {
+    h1 {
+        font-size: 25px;
+        display: flex;
+        margin: 20px;
+        color:  white;
+        align-items: center;
+    }
+}
+    @media (max-height: 1080px) {
+    h1 {
+        font-size: 45px;
+        display: flex;
+        margin-top: 10%;
+        color:  white;
+        align-items: center;
+    }
+    
+  }
+  @media (max-width: 1920px)  {
+    footer {
+    background-color:#e3e3e3;
+    bottom: 0;
+    margin-top: 78px;
+    width: 100%;
+}
+
+}
+
+
+
+  
+  
+    
+</style>
+<body>
+    <header>
+        <div class="container">
+                <p class="logo">Forvia  </p>
+        </div>
+    </header>
+    <section id="inicio">
+        <div class="video-background">
+            <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
+                <source src="video/FAURECIA_CORP_2021_short2_1.mp4" type="video/mp4">
+            </video>
+    <div>
+        <h1>Forvia: Connecting Ideas, Creating Solutions. <BR>Participate and discover the power of collaboration!</h1>
+    </div>
+    <a href="login.php">
+        <button class="button-5" role="button">   Join   </button>
+    </a>
+        
+    </section>
+    <footer id="footer">
+        <div class="container">
+            <a href="https://www.faurecia.com/en/contact-us" target="_blank">
+                <p>CONTACTS</p>
+            </a>
+            <a href="mailto:?subject=SEND%20YOU%20FEEDBACK" target="_blank">
+                <p>FEEDBACK</p>
+            </a>            
+            <a href="https://www.faurecia.com/en" target="_blank">
+                <p>WHERE WE ARE
+                </p>
+            </a>
+        </div>
+    </footer>
+
+</body>
+
+</html>

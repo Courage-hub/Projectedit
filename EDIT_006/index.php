@@ -210,6 +210,8 @@
 <?php
 // Iniciar la sesión al principio del script
 session_start();
+include("conexion.php");
+
 
 // Verificar si el usuario está logueado
 if (!isset($_SESSION['nombre']) || !isset($_SESSION['apellido'])) {
@@ -224,7 +226,6 @@ if (isset($_POST['logout'])) {
   header("Location: login.php"); // Redirigir al login
   exit();
 }
-include("conexion.php");
 
 $id = isset($_GET['id']) ? $_GET['id'] : '';
 $instruccion = isset($_GET['instruccion']) ? $_GET['instruccion'] : '';
@@ -263,11 +264,11 @@ $result = mysqli_query($conn, $query);
         <div class="menu-items">
           <li><a href="ProyectoFP.html">Home</a></li>
           <?php
-            // Mostrar el enlace "Admin" solo si el usuario es administrador
-            if (isset($_SESSION['rol']) && $_SESSION['rol'] == 'admin') {
-                echo '<li><a href="admin.php">Admin</a></li>';
-            }
-            ?>
+          // Mostrar el enlace "Admin" solo si el usuario es administrador
+          if (isset($_SESSION['rol']) && $_SESSION['rol'] == 'admin') {
+            echo '<li><a href="admin.php">Admin</a></li>';
+          }
+          ?>
         </div>
       </div>
     </div>

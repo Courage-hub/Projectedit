@@ -23,6 +23,11 @@
     $result = mysqli_query($conn, $sql);
 
     if ($result) {
+      // Reorganizar los IDs de la tabla fpproject
+      mysqli_query($conn, "SET @count = 0;");
+      mysqli_query($conn, "UPDATE fpproject SET id = @count:= @count + 1;");
+      mysqli_query($conn, "ALTER TABLE fpproject AUTO_INCREMENT = 1;");
+      
       echo " <script language='JavaScript'>
                         alert ('The data were correctly entered into the database');
                         location.assign ('index.php');
@@ -42,6 +47,10 @@
     <center>
       <h1>Publish your instruction<h1>
     </center> <br><br>
+    
+ <!-- Mostrar nombre y apellido del usuario logueado -->
+    <p>Publicado por: <?= $_SESSION['nombre'] . ' ' . $_SESSION['apellido'] ?></p>
+
     <textarea id="summernote" name="instruccion"></textarea>
     <br>
     <button type="submit" class="success" name="enviar">✔ Submit</button>
@@ -103,3 +112,4 @@
 </style>
 
 </html>
+ 

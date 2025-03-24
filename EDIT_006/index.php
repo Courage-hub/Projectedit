@@ -269,6 +269,7 @@ $result = mysqli_query($conn, $query);
             echo '<li><a href="admin.php">Admin</a></li>';
           }
           ?>
+          <li><a href="perfil.php">Profile</a></li>
         </div>
       </div>
     </div>

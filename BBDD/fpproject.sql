@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-03-2025 a las 09:32:51
+-- Tiempo de generación: 05-03-2025 a las 12:13:38
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -32,6 +32,13 @@ CREATE TABLE `fpproject` (
   `instruccion` longtext NOT NULL,
   `date` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `fpproject`
+--
+
+INSERT INTO `fpproject` (`id`, `instruccion`, `date`) VALUES
+(1, '<p>Prueba</p>', '2025-03-05 12:12:59');
 
 -- --------------------------------------------------------
 
@@ -113,7 +120,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `fpproject`
 --
 ALTER TABLE `fpproject`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `tb_data`

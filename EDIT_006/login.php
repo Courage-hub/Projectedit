@@ -6,15 +6,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $contraseña = $_POST['contraseña'];
 
-    $query = "SELECT * FROM usuarios WHERE email = '$email' AND aprobado = TRUE";
-    $result = mysqli_query($conn, $query);
+    // Consulta segura con prepared statements para evitar SQL Injection
+    $query = $conn->prepare("SELECT * FROM usuarios WHERE email = ? AND aprobado = TRUE");
+    $query->bind_param("s", $email);
+    $query->execute();
+    $result = $query->get_result();
 
-    if (mysqli_num_rows($result) == 1) {
-        $usuario = mysqli_fetch_assoc($result);
+    if ($result->num_rows == 1) {
+        $usuario = $result->fetch_assoc();
         if (password_verify($contraseña, $usuario['contraseña'])) {
+            // Guardar el ID en la sesión para usarlo en perfil.php
+            $_SESSION['id'] = $usuario['id'];
             $_SESSION['nombre'] = $usuario['nombre'];
             $_SESSION['apellido'] = $usuario['apellido'];
             $_SESSION['rol'] = $usuario['rol'];
+
             header("Location: index.php");
             exit();
         } else {
@@ -23,6 +29,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         echo "<p style='color: red; text-align: center;'>Usuario no encontrado o no aprobado.</p>";
     }
+
+    $query->close();
+    $conn->close();
 }
 ?>
 

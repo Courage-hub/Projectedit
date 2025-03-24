@@ -1,6 +1,15 @@
 <?php
-include("conexion.php");
-
+  // Iniciar la sesión al principio del script
+  session_start();
+  include("conexion.php");
+  
+  
+  // Verificar si el usuario está logueado
+  if (!isset($_SESSION['nombre']) || !isset($_SESSION['apellido'])) {
+    // Si no está logueado, redirigir al login
+    header("Location: login.php");
+    exit();
+  }
 // Verifica si se han enviado datos de búsqueda
 if (isset($_GET['id']) || isset($_GET['instruccion'])) {
     $id = $_GET['id'];

@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (mysqli_query($conn, $query)) {
         echo "<p style='color: green; text-align: center;'>Registro enviado para aprobación.</p>";
     } else {
-        echo "<p style='color: red; text-align: center;'>Error: " . mysqli_error($conn) . "</p>";
+        echo "<p style='color: red; text-align: center;'>Error:</p>";
     }
 }
 ?>

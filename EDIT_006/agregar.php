@@ -16,10 +16,20 @@
 
 <body>
   <?php
+      session_start();
+      include("conexion.php");
+      
+      
+      // Verificar si el usuario está logueado
+      if (!isset($_SESSION['nombre']) || !isset($_SESSION['apellido'])) {
+        // Si no está logueado, redirigir al login
+        header("Location: login.php");
+        exit();
+      }
+      
   if (isset($_POST['enviar'])) {
     $titulo = $_POST['instruccion'];
     $sql = "insert into fpproject (instruccion) values ('" . $titulo . "')";
-    include 'conexion.php';
     $result = mysqli_query($conn, $sql);
 
     if ($result) {
@@ -47,9 +57,6 @@
     <center>
       <h1>Publish your instruction<h1>
     </center> <br><br>
-    
- <!-- Mostrar nombre y apellido del usuario logueado -->
-    <p>Publicado por: <?= $_SESSION['nombre'] . ' ' . $_SESSION['apellido'] ?></p>
 
     <textarea id="summernote" name="instruccion"></textarea>
     <br>

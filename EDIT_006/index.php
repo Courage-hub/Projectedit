@@ -1,229 +1,17 @@
-<html lang="en">
-
-<head>
-  <title>Forvia</title>
-  <meta charset="UTF-8">
-  <meta name="author" content="courage">
-  <link rel="stylesheet" href="css/button/button.css">
-</head>
-<style>
-  @font-face {
-    font-family: 'Poppins';
-    src: url('$ROHWJOX.woff2') format('woff2'),
-      url('$ROHWJOX.woff2') format('woff');
-    font-weight: normal;
-    font-style: normal;
-  }
-
-  @font-face {
-    font-family: 'Poppins';
-    src: url('$ROHWJOX.woff2') format('woff2'),
-      url('$ROHWJOX.woff2') format('woff');
-    font-weight: bold;
-    font-style: normal;
-  }
-
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  #inicio {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    flex-direction: column;
-  }
-
-  body {
-    font-family: "Poppins", sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    /* Mínimo alto de la ventana */
-  }
-
-  .navbar {
-    width: 100%;
-    box-shadow: 0 1px 4px rgb(146 161 176 / 15%);
-
-  }
-
-  .nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 62px;
-  }
-
-  .navbar .menu-items {
-    display: flex;
-  }
-
-  .navbar .nav-container li {
-    list-style: none;
-  }
-
-  .navbar .nav-container a {
-    text-decoration: none;
-    color: #310e29;
-    font-weight: 500;
-    font-size: 1.2rem;
-    padding: 0.7rem;
-  }
-
-  .navbar .nav-container a:hover {
-    font-weight: bolder;
-  }
-
-  .nav-container {
-    display: block;
-    position: relative;
-    height: 60px;
-  }
-
-  .nav-container .checkbox {
-    position: absolute;
-    display: block;
-    height: 32px;
-    width: 32px;
-    top: 20px;
-    left: 20px;
-    z-index: 5;
-    opacity: 0;
-    cursor: pointer;
-  }
-
-  .nav-container .hamburger-lines {
-    display: block;
-    height: 26px;
-    width: 32px;
-    position: absolute;
-    top: 17px;
-    left: 20px;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  .nav-container .hamburger-lines .line {
-    display: block;
-    height: 4px;
-    width: 100%;
-    border-radius: 10px;
-    background: #0e2431;
-  }
-
-  .nav-container .hamburger-lines .line1 {
-    transform-origin: 0% 0%;
-    transition: transform 0.4s ease-in-out;
-  }
-
-  .nav-container .hamburger-lines .line2 {
-    transition: transform 0.2s ease-in-out;
-  }
-
-  .nav-container .hamburger-lines .line3 {
-    transform-origin: 0% 100%;
-    transition: transform 0.4s ease-in-out;
-  }
-
-  .navbar .menu-items {
-    padding-top: 120px;
-    background-color: white;
-    height: 100vh;
-    width: 100vh;
-    transform: translate(-150%);
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.5s ease-in-out;
-    text-align: center;
-  }
-
-  .navbar .menu-items li {
-    margin-bottom: 1.2rem;
-    font-size: 1.5rem;
-    font-weight: 500;
-  }
-
-  .logo {
-    position: absolute;
-    top: 5px;
-    right: 15px;
-    font-size: 1.2rem;
-    color: #0e2431;
-  }
-
-  .nav-container input[type="checkbox"]:checked~.menu-items {
-    transform: translateX(0);
-  }
-
-  .nav-container input[type="checkbox"]:checked~.hamburger-lines .line1 {
-    transform: rotate(45deg);
-  }
-
-  .nav-container input[type="checkbox"]:checked~.hamburger-lines .line2 {
-    transform: scaleY(0);
-  }
-
-  .nav-container input[type="checkbox"]:checked~.hamburger-lines .line3 {
-    transform: rotate(-45deg);
-  }
-
-  .nav-container input[type="checkbox"]:checked~.logo {
-    display: none;
-  }
-
-  table {
-    width: 95%;
-
-  }
-
-  td,
-  tr,
-  th {
-    border: 1px solid #dddddd;
-    padding: 20px;
-  }
-
-  .id {
-    width: 3%;
-  }
-
-  .name {
-    width: 50px;
-  }
-
-  .dat {
-    width: 10px;
-  }
-
-  .shares {
-    width: 25px;
-  }
-</style>
 <?php
-// Iniciar la sesión al principio del script
 session_start();
 include("conexion.php");
 
-
 // Verificar si el usuario está logueado
 if (!isset($_SESSION['nombre']) || !isset($_SESSION['apellido'])) {
-  // Si no está logueado, redirigir al login
   header("Location: login.php");
   exit();
 }
 
-// Cerrar sesión si se hace clic en el botón "Cerrar Sesión"
+// Cerrar sesión
 if (isset($_POST['logout'])) {
-  session_destroy(); // Destruir la sesión
-  header("Location: login.php"); // Redirigir al login
+  session_destroy();
+  header("Location: login.php");
   exit();
 }
 
@@ -245,97 +33,299 @@ if ($id || $instruccion) {
 }
 
 $result = mysqli_query($conn, $query);
-
 ?>
 
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <title>Forvia - Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="boostrap/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="boostrap/all.min.css" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-color: #2575fc;
+      --secondary-color: #1a5bbf;
+      --dark-color: #343a40;
+      --light-color: #f8f9fa;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f9ff;
+      color: #333;
+    }
+
+    .navbar {
+      background-color: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 0.8rem 1rem;
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--primary-color) !important;
+    }
+
+    .nav-link {
+      color: var(--dark-color) !important;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--primary-color) !important;
+    }
+
+    .user-greeting {
+      background-color: white;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+    }
+
+    .welcome-title {
+      color: var(--primary-color);
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .btn-primary-custom {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      border-radius: 8px;
+      padding: 0.5rem 1.5rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary-custom:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(37, 117, 252, 0.3);
+    }
+
+    .btn-outline-custom {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+      border-radius: 8px;
+      padding: 0.5rem 1.5rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline-custom:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .search-form {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+    }
+
+    .form-control {
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      border: 1px solid #dee2e6;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(37, 117, 252, 0.25);
+    }
+
+    .table-container {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+
+    .table {
+      margin-bottom: 0;
+    }
+
+    .table thead th {
+      background-color: var(--primary-color);
+      color: white;
+      border-bottom: none;
+      padding: 1rem;
+    }
+
+    .table tbody tr {
+      transition: all 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+      background-color: rgba(37, 117, 252, 0.05);
+    }
+
+    .action-link {
+      color: var(--primary-color);
+      text-decoration: none;
+      margin-right: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .action-link:hover {
+      color: var(--secondary-color);
+      text-decoration: underline;
+    }
+
+    .action-link.delete {
+      color: #dc3545;
+    }
+
+    .action-link.delete:hover {
+      color: #bb2d3b;
+    }
+
+    .container-main {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      .container-main {
+        padding: 1rem;
+      }
+
+      .table-responsive {
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+
 <body>
-  <nav>
-    <div class="navbar">
-      <div class="container nav-container">
-        <input class="checkbox" type="checkbox" name="" id="" />
-        <div class="hamburger-lines">
-          <span class="line line1"></span>
-          <span class="line line2"></span>
-          <span class="line line3"></span>
-        </div>
-        <div class="logo">
-          <h1>Forvia</h1>
-        </div>
-        <div class="menu-items">
-          <li><a href="ProyectoFP.html">Home</a></li>
-          <?php
-          // Mostrar el enlace "Admin" solo si el usuario es administrador
-          if (isset($_SESSION['rol']) && $_SESSION['rol'] == 'admin') {
-            echo '<li><a href="admin.php">Admin</a></li>';
-          }
-          ?>
-          <li><a href="perfil.php">Profile</a></li>
-        </div>
+  <!-- Barra de navegación -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Forvia</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="ProyectoFP.html">Inicio</a>
+          </li>
+          <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] == 'admin'): ?>
+            <li class="nav-item">
+              <a class="nav-link" href="admin.php">Administración</a>
+            </li>
+          <?php endif; ?>
+          <li class="nav-item">
+            <a class="nav-link" href="perfil.php">Perfil</a>
+          </li>
+        </ul>
+        <form method="POST" class="d-flex">
+          <button type="submit" name="logout" class="btn btn-outline-danger">
+            <i class="fas fa-sign-out-alt me-1"></i> Cerrar Sesión
+          </button>
+        </form>
       </div>
     </div>
   </nav>
-  <div id="inicio">
-    <br>
-    <br>
-    <br>
-    <br>
-    <h1>Client Task - Forvia</h1>
-    <p>Welcome, <?php echo $_SESSION['nombre'] . ' ' . $_SESSION['apellido']; ?></p>
-    <form method="POST" style="display:inline;"> <br>
-      <button type="submit" name="logout">Close Session</button>
-    </form>
-    <a href="agregar.php">+ New</a> <br><br>
-    <div id="inicio">
-      <form action="" method="GET">
-        <input type="text" name="id" placeholder="Search by ID" value="<?php echo htmlspecialchars($id); ?>">
-        <input type="text" name="instruccion" placeholder="Search by Instruction"
-          value="<?php echo htmlspecialchars($instruccion); ?>">
-        <button type="submit">Search</button>
-      </form>
-      <br>
 
-      <table>
-        <thead>
-          <tr>
-            <th class="id">ID</th>
-            <th class="title">Instruction</th>
-            <!-- <th class="name">Name</th> -->
-            <th class="dat">Date</th>
-            <th class="shares">Shares</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <?php
-          while ($filas = mysqli_fetch_assoc($result)) {
-            ?>
-            <tr>
-              <td class="id"><?php echo $filas['id'] ?></td>
-              <td class="tit"><?php echo $filas['instruccion'] ?></td>
-              <!-- <td>?php echo $filas['usuario'] ?></td>  -->
-              <td><?php echo date('d/m/Y H:i:s', strtotime($filas['date'])); ?></td>
-              <td><?php echo "<a href='editor.php?id=" . $filas['id'] . "'>Edit</a>"; ?>
-
-                <?php
-                echo "<a href='eliminar.php?id=" . $filas['id'] . "' onclick=\"return confirm('¿Are you sure you want to delete this content?')\">Delete</a>";
-                ?>
-              </td>
-
-              </td>
-
-              </td>
-            </tr>
-            <?php
-          }
-          ?>
-        </tbody>
-
-      </table>
-      <?php
-      mysqli_close($conn);
-      ?>
+  <!-- Contenido principal -->
+  <div class="container-main">
+    <!-- Mensaje de bienvenida -->
+    <div class="user-greeting">
+      <h1 class="welcome-title">Client Task - Forvia</h1>
+      <p class="lead">Bienvenido, <?php echo $_SESSION['nombre'] . ' ' . $_SESSION['apellido']; ?></p>
+      <div class="d-flex gap-2 mt-3">
+        <a href="agregar.php" class="btn btn-primary-custom">
+          <i class="fas fa-plus me-1"></i> Nuevo Registro
+        </a>
+      </div>
     </div>
+
+    <!-- Formulario de búsqueda -->
+    <div class="search-form">
+      <form action="" method="GET" class="row g-3">
+        <div class="col-md-5">
+          <input type="text" class="form-control" name="id" placeholder="Buscar por ID"
+            value="<?php echo htmlspecialchars($id); ?>">
+        </div>
+        <div class="col-md-5">
+          <input type="text" class="form-control" name="instruccion" placeholder="Buscar por Instrucción"
+            value="<?php echo htmlspecialchars($instruccion); ?>">
+        </div>
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-primary-custom w-100">
+            <i class="fas fa-search me-1"></i> Buscar
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Tabla de resultados -->
+    <div class="table-container">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Instrucción</th>
+              <th>Fecha</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php while ($filas = mysqli_fetch_assoc($result)): ?>
+              <tr>
+                <td><?php echo $filas['id'] ?></td>
+                <td><?php echo htmlspecialchars($filas['instruccion']) ?></td>
+                <td><?php echo date('d/m/Y H:i', strtotime($filas['date'])); ?></td>
+                <td>
+                  <a href="editor.php?id=<?php echo $filas['id']; ?>" class="action-link">
+                    <i class="fas fa-edit me-1"></i> Editar
+                  </a>
+                  <a href="eliminar.php?id=<?php echo $filas['id']; ?>" class="action-link delete"
+                    onclick="return confirm('¿Estás seguro de que deseas eliminar este registro?')">
+                    <i class="fas fa-trash-alt me-1"></i> Eliminar
+                  </a>
+                </td>
+              </tr>
+            <?php endwhile; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    src="boostrap/bootstrap.bundle.min.js"></script>
+  <script>
+    // Confirmación antes de eliminar
+    document.querySelectorAll('.delete').forEach(link => {
+      link.addEventListener('click', function (e) {
+        if (!confirm('¿Estás seguro de que deseas eliminar este registro?')) {
+          e.preventDefault();
+        }
+      });
+    });
+  </script>
 </body>
 
-
 </html>
+<?php
+mysqli_close($conn);
+?>

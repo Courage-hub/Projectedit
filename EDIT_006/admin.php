@@ -124,14 +124,58 @@ ob_end_clean();
   <title>Forvia - Administración</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Bootstrap local -->
+  <!-- Bootstrap CSS -->
   <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+
   <!-- Font Awesome local -->
   <link href="assets/css/fontawesome.min.css" rel="stylesheet">
   <link href="assets/css/solid.min.css" rel="stylesheet">
-  <!-- Fuente Poppins desde Google Fonts (opcional, puede cargarse localmente también) -->
+
   <style>
-    /* Estilos CSS originales se mantienen igual */
+   @font-face {
+      font-family: "Poppins";
+      src: url("assets/fonts/poppins/Poppins-Regular.woff2") format("woff2"),
+        url("assets/fonts/poppins/Poppins-Regular.woff") format("woff"),
+        url("assets/fonts/poppins/Poppins-Regular.ttf") format("truetype");
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 300;
+      src: url('assets/fonts/poppins/Poppins-Light.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 400;
+      src: url('assets/fonts/poppins/Poppins-Regular.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 500;
+      src: url('assets/fonts/poppins/Poppins-Medium.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 600;
+      src: url('assets/fonts/poppins/Poppins-SemiBold.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 700;
+      src: url('assets/fonts/poppins/Poppins-Bold.ttf') format('truetype');
+    }
+
     :root {
       --primary-color: #2575fc;
       --secondary-color: #1a5bbf;
@@ -301,7 +345,7 @@ ob_end_clean();
   <!-- Barra de navegación -->
   <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Forvia</a>
+      <a class="navbar-brand" href="index.php">Forvia</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>

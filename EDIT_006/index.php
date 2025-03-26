@@ -41,15 +41,56 @@ $result = mysqli_query($conn, $query);
 <head>
   <title>Forvia - Dashboard</title>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="boostrap/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="boostrap/all.min.css" rel="stylesheet">
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="assets/css/all.min.css" rel="stylesheet">
 
   <style>
+    @font-face {
+      font-family: "Poppins";
+      src: url("assets/fonts/poppins/Poppins-Regular.woff2") format("woff2"),
+        url("assets/fonts/poppins/Poppins-Regular.woff") format("woff"),
+        url("assets/fonts/poppins/Poppins-Regular.ttf") format("truetype");
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 300;
+      src: url('assets/fonts/poppins/Poppins-Light.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 400;
+      src: url('assets/fonts/poppins/Poppins-Regular.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 500;
+      src: url('assets/fonts/poppins/Poppins-Medium.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 600;
+      src: url('assets/fonts/poppins/Poppins-SemiBold.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 700;
+      src: url('assets/fonts/poppins/Poppins-Bold.ttf') format('truetype');
+    }
     :root {
       --primary-color: #2575fc;
       --secondary-color: #1a5bbf;
@@ -311,8 +352,7 @@ $result = mysqli_query($conn, $query);
   </div>
 
   <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-    src="boostrap/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/bootstrap.bundle.min.js"></script>
   <script>
     // Confirmación antes de eliminar
     document.querySelectorAll('.delete').forEach(link => {

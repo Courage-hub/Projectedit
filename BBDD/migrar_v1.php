@@ -112,11 +112,53 @@ if (isset($_GET['reset'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Migrador Profesional de Bases de Datos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="boostrap/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="boostrap/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/bootstrap-icons.css">
     <style>
+        @font-face {
+            font-family: "Poppins";
+            src: url("assets/fonts/poppins/Poppins-Regular.woff2") format("woff2"),
+                url("assets/fonts/poppins/Poppins-Regular.woff") format("woff"),
+                url("assets/fonts/poppins/Poppins-Regular.ttf") format("truetype");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 300;
+            src: url('assets/fonts/poppins/Poppins-Light.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 400;
+            src: url('assets/fonts/poppins/Poppins-Regular.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 500;
+            src: url('assets/fonts/poppins/Poppins-Medium.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 600;
+            src: url('assets/fonts/poppins/Poppins-SemiBold.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 700;
+            src: url('assets/fonts/poppins/Poppins-Bold.ttf') format('truetype');
+        }
+
         :root {
             --primary-color: #3498db;
             --secondary-color: #2c3e50;
@@ -198,7 +240,7 @@ if (isset($_GET['reset'])) {
                                     <div class="col-md-6">
                                         <div class="card mb-4">
                                             <div class="card-header bg-primary text-white">
-                                                <h3 class="mb-0"><i class="bi bi-server"></i> Servidor Origen</h3>
+                                                <h3 class="mb-0"><i class=""></i> Servidor Origen</h3>
                                             </div>
                                             <div class="card-body">
                                                 <div class="mb-3">
@@ -218,7 +260,7 @@ if (isset($_GET['reset'])) {
                                                             placeholder="Contraseña" id="sourcePassword">
                                                         <button class="btn btn-outline-secondary password-toggle"
                                                             type="button" data-target="sourcePassword">
-                                                            <i class="bi bi-eye"></i>
+                                                            <i class=""></i>
                                                         </button>
                                                     </div>
                                                 </div>
@@ -234,7 +276,7 @@ if (isset($_GET['reset'])) {
                                     <div class="col-md-6">
                                         <div class="card mb-4">
                                             <div class="card-header bg-success text-white">
-                                                <h3 class="mb-0"><i class="bi bi-download"></i> Servidor Destino</h3>
+                                                <h3 class="mb-0"><i class=""></i> Servidor Destino</h3>
                                             </div>
                                             <div class="card-body">
                                                 <div class="mb-3">
@@ -254,7 +296,7 @@ if (isset($_GET['reset'])) {
                                                             placeholder="Contraseña" id="targetPassword">
                                                         <button class="btn btn-outline-secondary password-toggle"
                                                             type="button" data-target="targetPassword">
-                                                            <i class="bi bi-eye"></i>
+                                                            <i class=""></i>
                                                         </button>
                                                     </div>
                                                 </div>
@@ -270,7 +312,7 @@ if (isset($_GET['reset'])) {
 
                                 <div class="text-center mt-3">
                                     <button type="submit" class="btn btn-primary btn-lg">
-                                        <i class="bi bi-arrow-right-circle"></i> Continuar
+                                        <i class="  "></i>Continuar
                                     </button>
                                 </div>
                             </form>
@@ -395,8 +437,7 @@ if (isset($_GET['reset'])) {
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="assets/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function () {
             // Toggle para mostrar/ocultar contraseñas

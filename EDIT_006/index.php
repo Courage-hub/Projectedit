@@ -11,7 +11,7 @@ if (!isset($_SESSION['nombre']) || !isset($_SESSION['apellido'])) {
 // Cerrar sesión
 if (isset($_POST['logout'])) {
   session_destroy();
-  header("Location: login.php");
+  header("Location: ProyectoFP.html");
   exit();
 }
 
@@ -264,7 +264,7 @@ $result = mysqli_query($conn, $query);
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link active" href="ProyectoFP.html">Inicio</a>
+            <a class="nav-link active" href="#">Inicio</a>
           </li>
           <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] == 'admin'): ?>
             <li class="nav-item">
@@ -332,7 +332,7 @@ $result = mysqli_query($conn, $query);
             <?php while ($filas = mysqli_fetch_assoc($result)): ?>
               <tr>
                 <td><?php echo $filas['id'] ?></td>
-                <td><?php echo htmlspecialchars($filas['instruccion']) ?></td>
+                <td><?php echo strip_tags($filas['instruccion']) ?></td>
                 <td><?php echo date('d/m/Y H:i', strtotime($filas['date'])); ?></td>
                 <td>
                   <a href="editor.php?id=<?php echo $filas['id']; ?>" class="action-link">

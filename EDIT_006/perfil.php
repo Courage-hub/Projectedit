@@ -5,7 +5,12 @@ include("conexion.php");
 if (!isset($_SESSION["id"])) {
   die("Error: No has iniciado sesión.");
 }
-
+// Cerrar sesión
+if (isset($_POST['logout'])) {
+  session_destroy();
+  header("Location: ProyectoFP.html");
+  exit();
+}
 $id = intval($_SESSION["id"]);
 
 // Obtener datos del usuario
@@ -22,8 +27,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $fotoNombre = $user['foto'];
 
   if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
-    $fotoNombre = "perfil_" . $id . "_" . time() . ".jpg";
-    move_uploaded_file($_FILES['foto']['tmp_name'], "uploads/" . $fotoNombre);
+    $fotoNombre = "uploads/perfil_" . $id . "_" . time() . ".jpg";
+    move_uploaded_file($_FILES['foto']['tmp_name'], $fotoNombre);
   }
 
   if (isset($_POST['foto_capturada']) && !empty($_POST['foto_capturada'])) {
@@ -46,325 +51,437 @@ $conn->close();
 <html lang="es">
 
 <head>
+  <title>Forvia - Perfil</title>
   <meta charset="UTF-8">
-  <title>User Profile</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Bootstrap local -->
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome local -->
+  <link href="assets/css/fontawesome.min.css" rel="stylesheet">
+  <link href="assets/css/solid.min.css" rel="stylesheet">
+  <!-- Fuente Poppins local -->
+  <style>
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 300;
+      src: url('assets/fonts/poppins/Poppins-Light.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 400;
+      src: url('assets/fonts/poppins/Poppins-Regular.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 500;
+      src: url('assets/fonts/poppins/Poppins-Medium.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 600;
+      src: url('assets/fonts/poppins/Poppins-SemiBold.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 700;
+      src: url('assets/fonts/poppins/Poppins-Bold.ttf') format('truetype');
+    }
+
+    :root {
+      --primary-color: #2575fc;
+      --secondary-color: #1a5bbf;
+      --danger-color: #dc3545;
+      --success-color: #28a745;
+      --dark-color: #343a40;
+      --light-color: #f8f9fa;
+      --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f9ff;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background-color: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 0.8rem 1rem;
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--primary-color) !important;
+    }
+
+    .nav-link {
+      color: var(--dark-color) !important;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--primary-color) !important;
+    }
+
+    .container-main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-grow: 1;
+      padding: 2rem;
+    }
+
+    .profile-card {
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: var(--card-shadow);
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .profile-content {
+      flex: 1;
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .profile-image-container {
+      width: 300px;
+      background-color: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      align-items: center;
+      padding: 2rem;
+      border-left: 1px solid #eee;
+    }
+
+    .profile-title {
+      color: var(--primary-color);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+
+    .profile-img {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid white;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1.5rem;
+    }
+
+    .profile-info {
+      margin-bottom: 1.5rem;
+    }
+
+    .profile-info p {
+      font-size: 1.1rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+    }
+
+    .profile-info strong {
+      color: var(--dark-color);
+      min-width: 120px;
+      display: inline-block;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .btn-primary-custom {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      border-radius: 8px;
+      padding: 0.6rem 1.2rem;
+      width: auto;
+      font-weight: 500;
+      width: auto;
+      transition: all 0.3s ease;
+      color: white;
+    }
+
+    .btn-primary-custom:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-2px);
+      color: white;
+    }
+
+    .btn-outline-primary-custom {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+      border-radius: 8px;
+      padding: 0.6rem 1.2rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline-primary-custom:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    #camara {
+      display: none;
+      margin-top: 1rem;
+      text-align: center;
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+
+    #video {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      background: #000;
+    }
+
+    .camera-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .file-upload {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .file-upload-btn {
+      width: 100%;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .file-upload input[type="file"] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .profile-card {
+        flex-direction: column-reverse;
+      }
+
+      .profile-image-container {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid #eee;
+        padding: 1.5rem;
+      }
+
+      .profile-content {
+        padding: 1.5rem;
+      }
+
+      .profile-img {
+        width: 150px;
+        height: 150px;
+      }
+    }
+  </style>
 </head>
-<style>
-  .perfil-container {
-    background: white;
-    margin-top: 2rem;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 600px;
-    text-align: center;
-  }
-
-  h2 {
-    font-size: 2rem;
-    color: #333;
-  }
-
-  .foto-perfil {
-    width: 220px;
-    height: 220px;
-    margin-top: 2.5rem;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #2575fc;
-    margin-bottom: 2.5rem;
-  }
-
-  textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
-    resize: none;
-    height: 9rem;
-  }
-
-  input[type="file"] {
-    margin: 0.5rem 0;
-  }
-
-  button {
-    width: 100%;
-    padding: 0.75rem;
-    background: #2575fc;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-top: 1rem;
-  }
-
-  button:hover {
-    background: #1a5bbf;
-  }
-  p{
-    font-size: 1.2rem;
-  }
-  video {
-    width: 100%;
-    max-width: 400px;
-    margin-top: 1rem;
-    border-radius: 10px;
-  }
-
-  @font-face {
-    font-family: 'Poppins';
-    src: url('$ROHWJOX.woff2') format('woff2'),
-      url('$ROHWJOX.woff2') format('woff');
-    font-weight: normal;
-    font-style: normal;
-  }
-
-  @font-face {
-    font-family: 'Poppins';
-    src: url('$ROHWJOX.woff2') format('woff2'),
-      url('$ROHWJOX.woff2') format('woff');
-    font-weight: bold;
-    font-style: normal;
-  }
-
-  * {
-    margin: 0;
-    font-family: "Poppins", sans-serif;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  #inicio {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    flex-direction: column;
-  }
-
-  body {
-    font-family: "Poppins", sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    /* Mínimo alto de la ventana */
-  }
-
-  .navbar {
-    width: 100%;
-    box-shadow: 0 1px 4px rgb(146 161 176 / 15%);
-
-  }
-
-  .nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 62px;
-  }
-
-  .navbar .menu-items {
-    display: flex;
-  }
-
-  .navbar .nav-container li {
-    list-style: none;
-  }
-
-  .navbar .nav-container a {
-    text-decoration: none;
-    color: #310e29;
-    font-weight: 500;
-    font-size: 1.2rem;
-    padding: 0.7rem;
-  }
-
-  .navbar .nav-container a:hover {
-    font-weight: bolder;
-  }
-
-  .nav-container {
-    display: block;
-    position: relative;
-    height: 60px;
-  }
-
-  .nav-container .checkbox {
-    position: absolute;
-    display: block;
-    height: 32px;
-    width: 32px;
-    top: 20px;
-    left: 20px;
-    z-index: 5;
-    opacity: 0;
-    cursor: pointer;
-  }
-
-  .nav-container .hamburger-lines {
-    display: block;
-    height: 26px;
-    width: 32px;
-    position: absolute;
-    top: 17px;
-    left: 20px;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  .nav-container .hamburger-lines .line {
-    display: block;
-    height: 4px;
-    width: 100%;
-    border-radius: 10px;
-    background: #0e2431;
-  }
-
-  .nav-container .hamburger-lines .line1 {
-    transform-origin: 0% 0%;
-    transition: transform 0.4s ease-in-out;
-  }
-
-  .nav-container .hamburger-lines .line2 {
-    transition: transform 0.2s ease-in-out;
-  }
-
-  .nav-container .hamburger-lines .line3 {
-    transform-origin: 0% 100%;
-    transition: transform 0.4s ease-in-out;
-  }
-
-  .navbar .menu-items {
-    padding-top: 120px;
-    background-color: white;
-    height: 100vh;
-    width: 100vh;
-    transform: translate(-150%);
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.5s ease-in-out;
-    text-align: center;
-  }
-
-  .navbar .menu-items li {
-    margin-bottom: 1.2rem;
-    font-size: 1.5rem;
-    font-weight: 500;
-  }
-
-  .logo {
-    position: absolute;
-    top: 5px;
-    right: 15px;
-    font-size: 1.2rem;
-    color: #0e2431;
-  }
-
-  .nav-container input[type="checkbox"]:checked~.menu-items {
-    transform: translateX(0);
-  }
-
-  .nav-container input[type="checkbox"]:checked~.hamburger-lines .line1 {
-    transform: rotate(45deg);
-  }
-
-  .nav-container input[type="checkbox"]:checked~.hamburger-lines .line2 {
-    transform: scaleY(0);
-  }
-
-  .nav-container input[type="checkbox"]:checked~.hamburger-lines .line3 {
-    transform: rotate(-45deg);
-  }
-
-  .nav-container input[type="checkbox"]:checked~.logo {
-    display: none;
-  }
-</style>
 
 <body>
-  <nav>
-    <div class="navbar">
-      <div class="container nav-container">
-        <input class="checkbox" type="checkbox" name="" id="" />
-        <div class="hamburger-lines">
-          <span class="line line1"></span>
-          <span class="line line2"></span>
-          <span class="line line3"></span>
-        </div>
-        <div class="logo">
-          <h1>Forvia</h1>
-        </div>
-        <div class="menu-items">
-          <li><a href="index.php">Home</a></li>
-          <?php
-          // Mostrar el enlace "Admin" solo si el usuario es administrador
-          if (isset($_SESSION['rol']) && $_SESSION['rol'] == 'admin') {
-            echo '<li><a href="admin.php">Admin</a></li>';
-          }
-          ?>
-          <li><a href="perfil.php">Profile</a></li>
-        </div>
+  <!-- Barra de navegación -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.php">Forvia</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.php">Inicio</a>
+          </li>
+          <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] == 'admin'): ?>
+            <li class="nav-item">
+              <a class="nav-link" href="admin.php">Administración</a>
+            </li>
+          <?php endif; ?>
+          <li class="nav-item">
+            <a class="nav-link active" href="perfil.php">Perfil</a>
+          </li>
+        </ul>
+        <form method="POST" class="d-flex">
+          <button type="submit" name="logout" class="btn btn-outline-danger">
+            <i class="fas fa-sign-out-alt me-1"></i> Cerrar Sesión
+          </button>
+        </form>
       </div>
     </div>
   </nav>
-  <div id="inicio">
-    <div class="perfil-container">
-      <h2>Profile of <?php echo htmlspecialchars($user['nombre'] . ' ' . $user['apellido']); ?></h2>
-      <img src="<?php echo htmlspecialchars($user['foto']); ?>" alt="Foto de perfil" class="foto-perfil"
-        id="foto_perfil_preview">
-      <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
-      <p><strong>Department:</strong> <?php echo htmlspecialchars($user['departamento']); ?></p>
 
-      <form method="POST" enctype="multipart/form-data">
-        <br>
-        <label for="descripcion">Description:</label>
-        <textarea name="descripcion" id="descripcion"
-          maxlength="150"><?php echo htmlspecialchars($user['descripcion']); ?></textarea>
-        <label for="foto">Upload photo:</label>
-        <input type="file" name="foto" accept="image/*">
+  <!-- Contenido principal -->
+  <div class="container-main">
+    <div class="profile-card">
+      <div class="profile-content">
+        <h1 class="profile-title">Mi Perfil</h1>
 
-        <button type="button" onclick="abrirCamara()">Take Photo</button>
-        <div id="camara" style="display: none;">
-          <video id="video" autoplay></video>
-          <button type="button" onclick="capturarFoto()">Capture</button>
-          <canvas id="canvas" style="display: none;"></canvas>
-          <input type="hidden" name="foto_capturada" id="foto_capturada">
+        <div class="profile-info">
+          <p><strong>Nombre:</strong> <?php echo htmlspecialchars($user['nombre']); ?></p>
+          <p><strong>Apellido:</strong> <?php echo htmlspecialchars($user['apellido']); ?></p>
+          <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
+          <p><strong>Departamento:</strong> <?php echo htmlspecialchars($user['departamento']); ?></p>
         </div>
 
-        <button type="submit">Save All Changes</button>
-      </form>
+        <form method="POST" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <textarea class="form-control" name="descripcion" id="descripcion"
+              maxlength="150"><?php echo htmlspecialchars($user['descripcion']); ?></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Cambiar foto de perfil</label>
+            <div class="file-upload">
+              <button type="button" class="btn btn-outline-primary-custom file-upload-btn">
+                <i class="fas fa-upload me-2"></i>Seleccionar archivo
+              </button>
+              <input type="file" name="foto" accept="image/*" onchange="previewImage(this)">
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-outline-primary-custom" onclick="abrirCamara()">
+            <i class="fas fa-camera me-2"></i>Tomar foto con cámara
+          </button>
+
+          <div id="camara">
+            <video id="video" autoplay></video>
+            <div class="camera-buttons">
+              <button type="button" class="btn btn-primary-custom" onclick="capturarFoto()">
+                <i class="fas fa-camera me-2"></i>Capturar
+              </button>
+              <button type="button" class="btn btn-outline-danger" onclick="cerrarCamara()">
+                <i class="fas fa-times me-2"></i>Cancelar
+              </button>
+            </div>
+            <canvas id="canvas" style="display: none;"></canvas>
+            <input type="hidden" name="foto_capturada" id="foto_capturada">
+          </div>
+
+          <button type="submit" class="btn btn-primary-custom">
+            <i class="fas fa-save me-2"></i>Guardar cambios
+          </button>
+        </form>
+      </div>
+
+      <div class="profile-image-container">
+        <img src="<?php echo htmlspecialchars($user['foto'] ?: 'assets/img/default-profile.jpg'); ?>"
+          alt="Foto de perfil" class="profile-img" id="foto_perfil_preview">
+        <h4><?php echo htmlspecialchars($user['nombre'] . ' ' . $user['apellido']); ?></h4>
+        <p class="text-muted"><?php echo htmlspecialchars($user['departamento']); ?></p>
+      </div>
     </div>
+  </div>
 
-    <script>
-      function abrirCamara() {
-        document.getElementById('camara').style.display = 'block';
-        navigator.mediaDevices.getUserMedia({ video: true })
-          .then(stream => {
-            document.getElementById('video').srcObject = stream;
-          })
-          .catch(err => console.log("Error al acceder a la cámara: ", err));
+  <!-- Scripts locales -->
+  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/fontawesome.min.js"></script>
+  <script>
+    let mediaStream = null;
+
+    function abrirCamara() {
+      document.getElementById('camara').style.display = 'block';
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+          mediaStream = stream;
+          document.getElementById('video').srcObject = stream;
+        })
+        .catch(err => {
+          console.error("Error al acceder a la cámara: ", err);
+          alert('No se pudo acceder a la cámara. Asegúrate de permitir el acceso.');
+        });
+    }
+
+    function cerrarCamara() {
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(track => track.stop());
+        mediaStream = null;
+      }
+      document.getElementById('camara').style.display = 'none';
+    }
+
+    function capturarFoto() {
+      const video = document.getElementById('video');
+      const canvas = document.getElementById('canvas');
+      const context = canvas.getContext('2d');
+
+      // Detener la transmisión de video
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(track => track.stop());
+        mediaStream = null;
       }
 
-      function capturarFoto() {
-        let video = document.getElementById('video');
-        let canvas = document.getElementById('canvas');
-        let context = canvas.getContext('2d');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        let fotoBase64 = canvas.toDataURL('image/png');
-        document.getElementById('foto_capturada').value = fotoBase64;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const fotoBase64 = canvas.toDataURL('image/png');
+      document.getElementById('foto_capturada').value = fotoBase64;
+      document.getElementById('foto_perfil_preview').src = fotoBase64;
+
+      document.getElementById('camara').style.display = 'none';
+    }
+
+    // Mostrar vista previa al seleccionar archivo
+    function previewImage(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          document.getElementById('foto_perfil_preview').src = event.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
       }
-    </script>
+    }
+
+    // Asignar el evento click al botón de subir archivo
+    document.querySelector('.file-upload-btn').addEventListener('click', function () {
+      this.nextElementSibling.click();
+    });
+  </script>
 </body>
 
 </html>

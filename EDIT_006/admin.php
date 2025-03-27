@@ -16,6 +16,12 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] != 'admin') {
     exit();
 }
 
+if (isset($_POST['logout'])) {
+  session_destroy();
+  header("Location: ProyectoFP.html");
+  exit();
+}
+
 include("conexion.php");
 
 // Configuración para evitar salidas de error no controladas

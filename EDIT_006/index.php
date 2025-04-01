@@ -36,16 +36,18 @@ $result = mysqli_query($conn, $query);
 ?>
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
   <title>Forvia - Dashboard</title>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Bootstrap CSS -->
   <link href="assets/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Font Awesome -->
   <link href="assets/css/all.min.css" rel="stylesheet">
+
 
   <style>
     @font-face {
@@ -91,6 +93,7 @@ $result = mysqli_query($conn, $query);
       font-weight: 700;
       src: url('assets/fonts/poppins/Poppins-Bold.ttf') format('truetype');
     }
+
     :root {
       --primary-color: #2575fc;
       --secondary-color: #1a5bbf;
@@ -236,7 +239,7 @@ $result = mysqli_query($conn, $query);
     }
 
     .container-main {
-      padding: 2rem;
+      padding: 1rem;
       max-width: 1200px;
       margin: 0 auto;
     }
@@ -250,11 +253,56 @@ $result = mysqli_query($conn, $query);
         overflow-x: auto;
       }
     }
+
+    /* Dark mode specific styles */
+    html[data-bs-theme="dark"] body {
+      background-color: #1a1a1a;
+      color: #e0e0e0;
+    }
+
+    html[data-bs-theme="dark"] .navbar {
+      background-color: #2c2c2c !important;
+      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+    }
+
+    html[data-bs-theme="dark"] .user-greeting,
+    html[data-bs-theme="dark"] .search-form,
+    html[data-bs-theme="dark"] .table-container {
+      background-color: #2c2c2c;
+      color: #e0e0e0;
+    }
+
+    html[data-bs-theme="dark"] .table thead th {
+      background-color: #1a5bbf;
+      color: white;
+    }
+
+    html[data-bs-theme="dark"] .table tbody tr:hover {
+      background-color: rgba(37, 117, 252, 0.2);
+    }
+
+    html[data-bs-theme="dark"] .form-control {
+      background-color: #3a3a3a;
+      color: #e0e0e0;
+      border-color: #4a4a4a;
+    }
+
+    html[data-bs-theme="dark"] .form-control:focus {
+      background-color: #4a4a4a;
+      color: #e0e0e0;
+    }
+
+    .instruction-cell {
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        white-space: pre-wrap; /* Mantiene saltos de línea y espacios */
+        word-wrap: break-word; /* Ajusta el texto si es muy largo */
+    }
   </style>
 </head>
 
 <body>
-  <!-- Barra de navegación -->
+  <!-- Navigation Bar -->
   <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">Forvia</a>
@@ -264,83 +312,87 @@ $result = mysqli_query($conn, $query);
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link active" href="#">Inicio</a>
+            <a class="nav-link active" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="perfil.php">Profile</a>
           </li>
           <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] == 'admin'): ?>
             <li class="nav-item">
-              <a class="nav-link" href="admin.php">Administración</a>
+              <a class="nav-link" href="admin.php">Administration</a>
             </li>
           <?php endif; ?>
-          <li class="nav-item">
-            <a class="nav-link" href="perfil.php">Perfil</a>
-          </li>
         </ul>
+
         <form method="POST" class="d-flex">
+          <button id="darkModeToggle" class="btn btn-outline-secondary me-1">
+            <i class="fas fa-moon"></i>
+          </button>
           <button type="submit" name="logout" class="btn btn-outline-danger">
-            <i class="fas fa-sign-out-alt me-1"></i> Cerrar Sesión
+            <i class="fas fa-sign-out-alt me-1"></i> Log Out
           </button>
         </form>
       </div>
     </div>
   </nav>
 
-  <!-- Contenido principal -->
+  <!-- Main Content -->
   <div class="container-main">
-    <!-- Mensaje de bienvenida -->
+    <!-- Welcome Message -->
     <div class="user-greeting">
       <h1 class="welcome-title">Client Task - Forvia</h1>
-      <p class="lead">Bienvenido, <?php echo $_SESSION['nombre'] . ' ' . $_SESSION['apellido']; ?></p>
+      <p class="lead">Welcome, <?php echo $_SESSION['nombre'] . ' ' . $_SESSION['apellido']; ?></p>
       <div class="d-flex gap-2 mt-3">
         <a href="agregar.php" class="btn btn-primary-custom">
-          <i class="fas fa-plus me-1"></i> Nuevo Registro
+          <i class="fas fa-plus me-1"></i> New Record
         </a>
       </div>
     </div>
 
-    <!-- Formulario de búsqueda -->
+    <!-- Search Form -->
     <div class="search-form">
       <form action="" method="GET" class="row g-3">
         <div class="col-md-5">
-          <input type="text" class="form-control" name="id" placeholder="Buscar por ID"
+          <input type="text" class="form-control" name="id" placeholder="Search by ID"
             value="<?php echo htmlspecialchars($id); ?>">
         </div>
         <div class="col-md-5">
-          <input type="text" class="form-control" name="instruccion" placeholder="Buscar por Instrucción"
+          <input type="text" class="form-control" name="instruccion" placeholder="Search by Instruction"
             value="<?php echo htmlspecialchars($instruccion); ?>">
         </div>
         <div class="col-md-2">
           <button type="submit" class="btn btn-primary-custom w-100">
-            <i class="fas fa-search me-1"></i> Buscar
+            <i class="fas fa-search me-1"></i> Search
           </button>
         </div>
       </form>
     </div>
 
-    <!-- Tabla de resultados -->
+    <!-- Results Table -->
     <div class="table-container">
       <div class="table-responsive">
         <table class="table table-hover">
           <thead>
             <tr>
               <th>ID</th>
-              <th>Instrucción</th>
-              <th>Fecha</th>
-              <th>Acciones</th>
+              <th>Instruction</th>
+              <th>Date</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             <?php while ($filas = mysqli_fetch_assoc($result)): ?>
               <tr>
                 <td><?php echo $filas['id'] ?></td>
-                <td><?php echo strip_tags($filas['instruccion']) ?></td>
+                <td class="tit"><?php echo $filas['instruccion'] ?></td>
                 <td><?php echo date('d/m/Y H:i', strtotime($filas['date'])); ?></td>
                 <td>
                   <a href="editor.php?id=<?php echo $filas['id']; ?>" class="action-link">
-                    <i class="fas fa-edit me-1"></i> Editar
+                    <i class="fas fa-edit me-1"></i>
                   </a>
                   <a href="eliminar.php?id=<?php echo $filas['id']; ?>" class="action-link delete"
-                    onclick="return confirm('¿Estás seguro de que deseas eliminar este registro?')">
-                    <i class="fas fa-trash-alt me-1"></i> Eliminar
+                    onclick="return confirm('Are you sure you want to delete this record?')">
+                    <i class="fas fa-trash-alt me-1"></i>
                   </a>
                 </td>
               </tr>
@@ -353,11 +405,13 @@ $result = mysqli_query($conn, $query);
 
   <!-- Scripts -->
   <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/darkmode.js"></script>
+  <script src="assets/js/fontawesome.min.js"></script>
   <script>
     // Confirmación antes de eliminar
     document.querySelectorAll('.delete').forEach(link => {
       link.addEventListener('click', function (e) {
-        if (!confirm('¿Estás seguro de que deseas eliminar este registro?')) {
+        if (!confirm('Are you sure you want to delete this record?')) {
           e.preventDefault();
         }
       });

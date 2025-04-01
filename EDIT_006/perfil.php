@@ -48,10 +48,10 @@ $conn->close();
 ?>
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
-  <title>Forvia - Perfil</title>
+  <title>Forvia - Profile</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Bootstrap local -->
@@ -320,11 +320,52 @@ $conn->close();
         height: 150px;
       }
     }
+
+    /* Dark mode specific styles */
+    html[data-bs-theme="dark"] body {
+      background-color: #1a1a1a;
+      color: #e0e0e0;
+    }
+
+    html[data-bs-theme="dark"] .navbar {
+      background-color: #2c2c2c !important;
+      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+    }
+
+    html[data-bs-theme="dark"] .user-greeting,
+    html[data-bs-theme="dark"] .search-form,
+    html[data-bs-theme="dark"] .table-container,
+    html[data-bs-theme="dark"] .profile-content,
+    html[data-bs-theme="dark"] .profile-image-container{
+      background-color: #2c2c2c;
+      color: #e0e0e0;
+    }
+
+    html[data-bs-theme="dark"] .table thead th {
+      background-color: #1a5bbf;
+      color: white;
+    }
+
+    html[data-bs-theme="dark"] .table tbody tr:hover {
+      background-color: rgba(37, 117, 252, 0.2);
+    }
+
+    html[data-bs-theme="dark"] .form-control {
+      background-color: #3a3a3a;
+      color: #e0e0e0;
+      border-color: #4a4a4a;
+    }
+
+    html[data-bs-theme="dark"] .form-control:focus,
+    html[data-bs-theme="dark"] #camara{
+      background-color: #4a4a4a;
+      color: #e0e0e0;
+    }
   </style>
 </head>
 
 <body>
-  <!-- Barra de navegación -->
+  <!-- Navigation Bar -->
   <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="index.php">Forvia</a>
@@ -334,68 +375,72 @@ $conn->close();
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link" href="index.php">Inicio</a>
+            <a class="nav-link" href="index.php">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="perfil.php">Profile</a>
           </li>
           <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] == 'admin'): ?>
             <li class="nav-item">
-              <a class="nav-link" href="admin.php">Administración</a>
+              <a class="nav-link" href="admin.php">Administration</a>
             </li>
           <?php endif; ?>
-          <li class="nav-item">
-            <a class="nav-link active" href="perfil.php">Perfil</a>
-          </li>
         </ul>
         <form method="POST" class="d-flex">
+          <!-- Dark Mode Toggle -->
+          <button id="darkModeToggle" class="btn btn-outline-secondary me-1">
+            <i class="fas fa-moon"></i>
+          </button>
           <button type="submit" name="logout" class="btn btn-outline-danger">
-            <i class="fas fa-sign-out-alt me-1"></i> Cerrar Sesión
+            <i class="fas fa-sign-out-alt me-1"></i> Log Out
           </button>
         </form>
       </div>
     </div>
   </nav>
 
-  <!-- Contenido principal -->
+  <!-- Main Content -->
   <div class="container-main">
     <div class="profile-card">
       <div class="profile-content">
-        <h1 class="profile-title">Mi Perfil</h1>
+        <h1 class="profile-title">My Profile</h1>
 
         <div class="profile-info">
-          <p><strong>Nombre:</strong> <?php echo htmlspecialchars($user['nombre']); ?></p>
-          <p><strong>Apellido:</strong> <?php echo htmlspecialchars($user['apellido']); ?></p>
+          <p><strong>Name:</strong> <?php echo htmlspecialchars($user['nombre']); ?></p>
+          <p><strong>Last Name:</strong> <?php echo htmlspecialchars($user['apellido']); ?></p>
           <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
-          <p><strong>Departamento:</strong> <?php echo htmlspecialchars($user['departamento']); ?></p>
+          <p><strong>Department:</strong> <?php echo htmlspecialchars($user['departamento']); ?></p>
         </div>
 
         <form method="POST" enctype="multipart/form-data">
           <div class="form-group">
-            <label for="descripcion" class="form-label">Descripción</label>
+            <label for="descripcion" class="form-label">Description</label>
             <textarea class="form-control" name="descripcion" id="descripcion"
               maxlength="150"><?php echo htmlspecialchars($user['descripcion']); ?></textarea>
           </div>
 
           <div class="form-group">
-            <label class="form-label">Cambiar foto de perfil</label>
+            <label class="form-label">Change Profile Picture</label>
             <div class="file-upload">
               <button type="button" class="btn btn-outline-primary-custom file-upload-btn">
-                <i class="fas fa-upload me-2"></i>Seleccionar archivo
+                <i class="fas fa-upload me-2"></i>Select File
               </button>
               <input type="file" name="foto" accept="image/*" onchange="previewImage(this)">
             </div>
           </div>
 
           <button type="button" class="btn btn-outline-primary-custom" onclick="abrirCamara()">
-            <i class="fas fa-camera me-2"></i>Tomar foto con cámara
+            <i class="fas fa-camera me-2"></i>Take Photo with Camera
           </button>
 
           <div id="camara">
             <video id="video" autoplay></video>
             <div class="camera-buttons">
               <button type="button" class="btn btn-primary-custom" onclick="capturarFoto()">
-                <i class="fas fa-camera me-2"></i>Capturar
+                <i class="fas fa-camera me-2"></i>Capture
               </button>
               <button type="button" class="btn btn-outline-danger" onclick="cerrarCamara()">
-                <i class="fas fa-times me-2"></i>Cancelar
+                <i class="fas fa-times me-2"></i>Cancel
               </button>
             </div>
             <canvas id="canvas" style="display: none;"></canvas>
@@ -403,22 +448,23 @@ $conn->close();
           </div>
 
           <button type="submit" class="btn btn-primary-custom">
-            <i class="fas fa-save me-2"></i>Guardar cambios
+            <i class="fas fa-save me-2"></i>Save Changes
           </button>
         </form>
       </div>
 
       <div class="profile-image-container">
         <img src="<?php echo htmlspecialchars($user['foto'] ?: 'assets/img/default-profile.jpg'); ?>"
-          alt="Foto de perfil" class="profile-img" id="foto_perfil_preview">
+          alt="Profile Picture" class="profile-img" id="foto_perfil_preview">
         <h4><?php echo htmlspecialchars($user['nombre'] . ' ' . $user['apellido']); ?></h4>
         <p class="text-muted"><?php echo htmlspecialchars($user['departamento']); ?></p>
       </div>
     </div>
   </div>
 
-  <!-- Scripts locales -->
+  <!-- Local Scripts -->
   <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/darkmode.js"></script>
   <script src="assets/js/fontawesome.min.js"></script>
   <script>
     let mediaStream = null;

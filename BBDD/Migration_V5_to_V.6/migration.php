@@ -106,12 +106,12 @@ if (isset($_GET['reset'])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Migrador Profesional de Bases de Datos</title>
+    <title>Professional Database Migrator</title>
     <link rel="stylesheet" href="assets/bootstrap.min.css">
     <link rel="stylesheet" href="assets/bootstrap-icons.css">
     <style>
@@ -229,10 +229,10 @@ if (isset($_GET['reset'])) {
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <?php if (!isset($_SESSION['source'])) { ?>
-                    <!-- Formulario inicial mejorado -->
+                    <!-- Improved initial form -->
                     <div class="card shadow-lg">
                         <div class="card-header">
-                            <h2 class="mb-0 text-center"><i class="bi bi-database"></i> Configurar Migración</h2>
+                            <h2 class="mb-0 text-center"><i class="bi bi-database"></i> Database migration from V.5 to V.6</h2>
                         </div>
                         <div class="card-body">
                             <form method="post">
@@ -240,24 +240,24 @@ if (isset($_GET['reset'])) {
                                     <div class="col-md-6">
                                         <div class="card mb-4">
                                             <div class="card-header bg-primary text-white">
-                                                <h3 class="mb-0"><i class=""></i> Servidor Origen</h3>
+                                                <h3 class="mb-0"><i class=""></i>Server 1 (V.5)</h3>
                                             </div>
                                             <div class="card-body">
                                                 <div class="mb-3">
                                                     <label class="form-label">Host</label>
                                                     <input type="text" name="source[host]" class="form-control"
-                                                        placeholder="Ej: localhost o IP" required>
+                                                        placeholder="E.g.: localhost or IP" required>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label class="form-label">Usuario</label>
+                                                    <label class="form-label">User</label>
                                                     <input type="text" name="source[user]" class="form-control"
-                                                        placeholder="Usuario MySQL" required>
+                                                        placeholder="MySQL User" required>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label class="form-label">Contraseña</label>
+                                                    <label class="form-label">Password</label>
                                                     <div class="input-group">
                                                         <input type="password" name="source[password]" class="form-control"
-                                                            placeholder="Contraseña" id="sourcePassword">
+                                                            placeholder="Password" id="sourcePassword">
                                                         <button class="btn btn-outline-secondary password-toggle"
                                                             type="button" data-target="sourcePassword">
                                                             <i class=""></i>
@@ -265,9 +265,9 @@ if (isset($_GET['reset'])) {
                                                     </div>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label class="form-label">Base de datos</label>
+                                                    <label class="form-label">Database</label>
                                                     <input type="text" name="source[dbname]" class="form-control"
-                                                        placeholder="Nombre de la base de datos" required>
+                                                        placeholder="Database name" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -276,24 +276,24 @@ if (isset($_GET['reset'])) {
                                     <div class="col-md-6">
                                         <div class="card mb-4">
                                             <div class="card-header bg-success text-white">
-                                                <h3 class="mb-0"><i class=""></i> Servidor Destino</h3>
+                                                <h3 class="mb-0"><i class=""></i>Server 2 (V.6)</h3>
                                             </div>
                                             <div class="card-body">
                                                 <div class="mb-3">
                                                     <label class="form-label">Host</label>
                                                     <input type="text" name="target[host]" class="form-control"
-                                                        placeholder="Ej: localhost o IP" required>
+                                                        placeholder="E.g.: localhost or IP" required>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label class="form-label">Usuario</label>
+                                                    <label class="form-label">User</label>
                                                     <input type="text" name="target[user]" class="form-control"
-                                                        placeholder="Usuario MySQL" required>
+                                                        placeholder="MySQL User" required>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label class="form-label">Contraseña</label>
+                                                    <label class="form-label">Password</label>
                                                     <div class="input-group">
                                                         <input type="password" name="target[password]" class="form-control"
-                                                            placeholder="Contraseña" id="targetPassword">
+                                                            placeholder="Password" id="targetPassword">
                                                         <button class="btn btn-outline-secondary password-toggle"
                                                             type="button" data-target="targetPassword">
                                                             <i class=""></i>
@@ -301,9 +301,9 @@ if (isset($_GET['reset'])) {
                                                     </div>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label class="form-label">Nueva base de datos</label>
+                                                    <label class="form-label">New Database</label>
                                                     <input type="text" name="new_db" class="form-control"
-                                                        placeholder="Nombre para la nueva base de datos" required>
+                                                        placeholder="Name for the new database" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -312,7 +312,7 @@ if (isset($_GET['reset'])) {
 
                                 <div class="text-center mt-3">
                                     <button type="submit" class="btn btn-primary btn-lg">
-                                        <i class="  "></i>Continuar
+                                        <i class="  "></i> Start Migration
                                     </button>
                                 </div>
                             </form>
@@ -320,16 +320,16 @@ if (isset($_GET['reset'])) {
                     </div>
 
                 <?php } elseif (!isset($_POST['migrate'])) { ?>
-                    <!-- Editor de base de datos -->
+                    <!-- Database editor -->
                     <div class="card shadow-lg">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h2 class="mb-0"><i class="bi bi-pencil-square"></i> Editor de Base de Datos</h2>
+                            <h2 class="mb-0"><i class="bi bi-pencil-square"></i> Database Editor</h2>
                             <div>
                                 <button id="save-changes" class="btn btn-warning me-2">
-                                    <i class="bi bi-save"></i> Guardar Cambios
+                                    <i class="bi bi-save"></i> Save Changes
                                 </button>
                                 <a href="?reset=1" class="btn btn-secondary">
-                                    <i class="bi bi-arrow-left"></i> Volver
+                                    <i class="bi bi-arrow-left"></i> Back
                                 </a>
                             </div>
                         </div>
@@ -350,7 +350,7 @@ if (isset($_GET['reset'])) {
                                             <h3 class="mb-0"><?= htmlspecialchars($table[0]) ?></h3>
                                             <button class="btn btn-sm btn-outline-primary rename-btn"
                                                 data-table="<?= htmlspecialchars($table[0]) ?>">
-                                                <i class="bi bi-pencil"></i> Renombrar
+                                                <i class="bi bi-pencil"></i> Rename
                                             </button>
                                         </div>
                                         <div class="card-body">
@@ -395,32 +395,32 @@ if (isset($_GET['reset'])) {
                         <div class="card-footer text-end">
                             <form method="post">
                                 <button type="submit" name="migrate" class="btn btn-success btn-lg">
-                                    <i class="bi bi-check-circle"></i> Migrar Base de Datos
+                                    <i class="bi bi-check-circle"></i> Migrate Database
                                 </button>
                             </form>
                         </div>
                     </div>
 
                 <?php } else { ?>
-                    <!-- Confirmación de migración -->
+                    <!-- Migration confirmation -->
                     <div class="card shadow-lg">
                         <div class="card-header bg-success text-white">
-                            <h2 class="mb-0"><i class="bi bi-check2-circle"></i> Migración Completa</h2>
+                            <h2 class="mb-0"><i class="bi bi-check2-circle"></i> Migration Complete</h2>
                         </div>
                         <div class="card-body text-center">
                             <div class="mb-4">
                                 <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
-                                <h3 class="mt-3">¡Migración exitosa!</h3>
+                                <h3 class="mt-3">Migration Successful!</h3>
                             </div>
 
                             <div class="alert alert-info text-start">
-                                <h5>Resumen:</h5>
+                                <h5>Summary:</h5>
                                 <ul>
-                                    <li><strong>Origen:</strong>
+                                    <li><strong>Source:</strong>
                                         <?= $_SESSION['source']['dbname'] ?>@<?= $_SESSION['source']['host'] ?></li>
-                                    <li><strong>Destino:</strong>
+                                    <li><strong>Target:</strong>
                                         <?= $_SESSION['new_db'] ?>@<?= $_SESSION['target']['host'] ?></li>
-                                    <li><strong>SQL ejecutado:</strong>
+                                    <li><strong>Executed SQL:</strong>
                                         <pre
                                             class="mt-2 p-2 bg-light rounded">ALTER TABLE usuarios ADD COLUMN telefono VARCHAR(20) DEFAULT 'TBD';</pre>
                                     </li>
@@ -428,7 +428,7 @@ if (isset($_GET['reset'])) {
                             </div>
 
                             <a href="?reset=1" class="btn btn-primary btn-lg mt-3">
-                                <i class="bi bi-arrow-repeat"></i> Nueva Migración
+                                <i class="bi bi-arrow-repeat"></i> New Migration
                             </a>
                         </div>
                     </div>

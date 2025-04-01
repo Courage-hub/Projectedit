@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -238,26 +238,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="login-card card">
         <div class="card-header">
             <span class="brand-logo">Forvia</span>
-            <h3>Iniciar Sesión</h3>
+            <h3>Login</h3>
         </div>
         <div class="card-body">
             <?php if(isset($error)): ?>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <?php echo $error; ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             <?php endif; ?>
             
             <form method="POST">
                 <div class="mb-3">
-                    <label for="email" class="form-label">Correo Electrónico</label>
+                    <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control" id="email" name="email" 
                            value="<?php echo isset($_COOKIE['recordar_email']) ? htmlspecialchars($_COOKIE['recordar_email']) : ''; ?>" 
-                           placeholder="tu@email.com" required>
+                           placeholder="your@email.com" required>
                 </div>
                 
                 <div class="mb-3">
-                    <label for="contraseña" class="form-label">Contraseña</label>
+                    <label for="contraseña" class="form-label">Password</label>
                     <input type="password" class="form-control" id="contraseña" name="contraseña" placeholder="••••••••" required>
                 </div>
                 
@@ -265,24 +265,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="recordar" name="recordar" 
                                <?php echo isset($_COOKIE['recordar_email']) ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="recordar">Recordar </label>
+                        <label class="form-check-label" for="recordar">Remember me</label>
                     </div>
-                    <a href="#" class="login-link">¿Olvidaste tu contraseña?</a>
+                    <a href="#" class="login-link">Forgot your password?</a>
                 </div>
                 
                 <div class="d-grid mb-3">
                     <button type="submit" class="btn btn-login">
-                        <i class="fas fa-sign-in-alt me-2"></i> Acceder
+                        <i class="fas fa-sign-in-alt me-2"></i> Login
                     </button>
                 </div>
                 
                 <div class="divider">
-                    <span class="divider-text">o</span>
+                    <span class="divider-text">or</span>
                 </div>
                 
                 <div class="d-grid">
                     <a href="registrar.php" class="btn btn-outline-primary">
-                        <i class="fas fa-user-plus"></i> Crear nueva cuenta
+                        <i class="fas fa-user-plus"></i> Create a new account
                     </a>
                 </div>
             </form>

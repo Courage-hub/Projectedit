@@ -11,7 +11,7 @@ if (!isset($_SESSION['nombre']) || !isset($_SESSION['apellido'])) {
 // Cerrar sesión
 if (isset($_POST['logout'])) {
   session_destroy();
-  header("Location: ProyectoFP.html");
+  header("Location: esvlc.edit.home.html");
   exit();
 }
 
@@ -387,13 +387,17 @@ $result = mysqli_query($conn, $query);
                 <td class="tit"><?php echo $filas['instruccion'] ?></td>
                 <td><?php echo date('d/m/Y H:i', strtotime($filas['date'])); ?></td>
                 <td>
-                  <a href="editor.php?id=<?php echo $filas['id']; ?>" class="action-link">
-                    <i class="fas fa-edit me-1"></i>
-                  </a>
-                  <a href="eliminar.php?id=<?php echo $filas['id']; ?>" class="action-link delete"
-                    onclick="return confirm('Are you sure you want to delete this record?')">
-                    <i class="fas fa-trash-alt me-1"></i>
-                  </a>
+                  <?php if ($filas['user_id'] == $_SESSION['id']): // Verificar si el usuario es el creador ?>
+                    <a href="editor.php?id=<?php echo $filas['id']; ?>" class="action-link">
+                      <i class="fas fa-edit me-1"></i>
+                    </a>
+                    <a href="eliminar.php?id=<?php echo $filas['id']; ?>" class="action-link delete"
+                      onclick="return confirm('Are you sure you want to delete this record?')">
+                      <i class="fas fa-trash-alt me-1"></i>
+                    </a>
+                  <?php else: ?>
+                    <span class="text-muted">No actions available</span>
+                  <?php endif; ?>
                 </td>
               </tr>
             <?php endwhile; ?>

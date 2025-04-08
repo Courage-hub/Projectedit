@@ -5,12 +5,14 @@ $password = "";
 $database = "edit_0006";
 
 // Crear conexión
-$conn = new mysqli($servername, $username, $password, $database);
+$conn = new mysqli($servername, $username, $password, $database,);
+
 // Verificar la conexión
 if ($conn->connect_error) {
   die("Conexión fallida: " . $conn->connect_error);
 }
-// Seleccionar la base de datos
+
+// Seleccionar la base de datos (opcional, ya lo hiciste en el constructor)
 mysqli_select_db($conn, $database);
 ?>
 

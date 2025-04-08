@@ -18,7 +18,7 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] != 'admin') {
 
 if (isset($_POST['logout'])) {
   session_destroy();
-  header("Location: ProyectoFP.html");
+  header("Location: esvlc.edit.home.html");
   exit();
 }
 

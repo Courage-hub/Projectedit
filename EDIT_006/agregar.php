@@ -19,7 +19,6 @@
       session_start();
       include("conexion.php");
       
-      
       // Verificar si el usuario está logueado
       if (!isset($_SESSION['nombre']) || !isset($_SESSION['apellido'])) {
         // Si no está logueado, redirigir al login
@@ -27,29 +26,18 @@
         exit();
       }
       
-  if (isset($_POST['enviar'])) {
-    $titulo = $_POST['instruccion'];
-    $sql = "insert into fpproject (instruccion) values ('" . $titulo . "')";
-    $result = mysqli_query($conn, $sql);
+      if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+          $instruccion = mysqli_real_escape_string($conn, $_POST['instruccion']);
+          $user_id = $_SESSION['id']; // ID del usuario actual
 
-    if ($result) {
-      // Reorganizar los IDs de la tabla fpproject
-      mysqli_query($conn, "SET @count = 0;");
-      mysqli_query($conn, "UPDATE fpproject SET id = @count:= @count + 1;");
-      mysqli_query($conn, "ALTER TABLE fpproject AUTO_INCREMENT = 1;");
-      
-      echo " <script language='JavaScript'>
-                        alert ('The data were correctly entered into the database');
-                        location.assign ('index.php');
-                        </script>";
-    } else {
-      echo " <script language='JavaScript'>
-                alert ('ERROR: The data were not correctly entered into the database.');
-                location.assign ('index.php');
-                </script>";
-    }
-    mysqli_close($conn);
-  }
+          $query = "INSERT INTO fpproject (instruccion, user_id) VALUES ('$instruccion', '$user_id')";
+          if (mysqli_query($conn, $query)) {
+              header("Location: index.php");
+              exit();
+          } else {
+              echo "Error: " . mysqli_error($conn);
+          }
+      }
   ?>
 
   <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
@@ -119,4 +107,3 @@
 </style>
 
 </html>
- 

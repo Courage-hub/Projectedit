@@ -8,7 +8,7 @@ if (!isset($_SESSION["id"])) {
 // Cerrar sesión
 if (isset($_POST['logout'])) {
   session_destroy();
-  header("Location: ProyectoFP.html");
+  header("Location: esvlc.edit.home.html");
   exit();
 }
 $id = intval($_SESSION["id"]);

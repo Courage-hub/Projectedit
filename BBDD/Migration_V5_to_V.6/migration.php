@@ -267,7 +267,7 @@ if (isset($_GET['reset'])) {
                                                 <div class="mb-3">
                                                     <label class="form-label">Database</label>
                                                     <input type="text" name="source[dbname]" class="form-control"
-                                                        placeholder="Database name" required>
+                                                        placeholder="Database name" value="edit_0005" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -303,7 +303,7 @@ if (isset($_GET['reset'])) {
                                                 <div class="mb-3">
                                                     <label class="form-label">New Database</label>
                                                     <input type="text" name="new_db" class="form-control"
-                                                        placeholder="Name for the new database" required>
+                                                        placeholder="Name for the new database" value="edit_0006" required>
                                                 </div>
                                             </div>
                                         </div>

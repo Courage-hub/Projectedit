@@ -15,39 +15,59 @@
 
 <body>
     <?php
-    // Iniciar la sesión al principio del script
     session_start();
     include("conexion.php");
 
     // Verificar si el usuario está logueado
     if (!isset($_SESSION['nombre']) || !isset($_SESSION['apellido'])) {
-        // Si no está logueado, redirigir al login
         header("Location: login.php");
         exit();
     }
 
     if (isset($_POST['editar'])) {
         $id = $_POST['id'];
-        $titulo = $_POST['instruccion'];
+        $titulo = mysqli_real_escape_string($conn, $_POST['instruccion']);
+        $user_id = $_SESSION['id'];
 
-        $sql = "UPDATE fpproject SET instruccion='$titulo' WHERE id=$id";
-        $result = mysqli_query($conn, $sql);
+        // Verificar si el usuario actual es el creador del registro
+        $check_query = "SELECT * FROM fpproject WHERE id = '$id' AND user_id = '$user_id'";
+        $check_result = mysqli_query($conn, $check_query);
 
-        if ($result) {
-            echo "<script>alert('The data was updated correctly');
-        location.assign ('index.php');
-        </script>";
+        if (mysqli_num_rows($check_result) > 0) {
+            // Actualizar el registro si el usuario es el creador
+            $sql = "UPDATE fpproject SET instruccion='$titulo' WHERE id=$id";
+            $result = mysqli_query($conn, $sql);
+
+            if ($result) {
+                echo "<script>alert('The data was updated correctly');
+                location.assign('index.php');
+                </script>";
+            } else {
+                echo "<script>alert('ERROR: The data could not be updated.');</script>";
+            }
         } else {
-            echo "<script>alert('ERROR: The data could not be updated.');</script>";
+            echo "<script>alert('You do not have permission to edit this record.');
+            location.assign('index.php');
+            </script>";
         }
     }
 
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
+        $user_id = $_SESSION['id'];
 
-        $sql = "SELECT * FROM fpproject WHERE id=$id";
+        // Verificar si el usuario actual es el creador del registro
+        $sql = "SELECT * FROM fpproject WHERE id = '$id' AND user_id = '$user_id'";
         $result = mysqli_query($conn, $sql);
-        $row = mysqli_fetch_assoc($result);
+
+        if (mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_assoc($result);
+        } else {
+            echo "<script>alert('You do not have permission to access this record.');
+            location.assign('index.php');
+            </script>";
+            exit();
+        }
     }
     ?>
 

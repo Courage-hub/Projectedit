@@ -4,16 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit</title>
+    <title>Forvia - Edit</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="assets/css/all.min.css" rel="stylesheet">
+    
+    <!-- Summernote resources -->
     <link href="summernote-0.8.18-dist/bootstrap.min.css" rel="stylesheet">
     <script src="summernote-0.8.18-dist/jquery-3.5.1.min.js"></script>
     <script src="summernote-0.8.18-dist/bootstrap.min.js"></script>
-
     <link href="summernote-0.8.18-dist/summernote.min.css" rel="stylesheet">
     <script src="summernote-0.8.18-dist/summernote.min.js"></script>
+
 </head>
 
-<body>
+<body class="bg-light">
     <?php
     session_start();
     include("conexion.php");
@@ -71,82 +78,137 @@
     }
     ?>
 
-    <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
-        <input type="hidden" name="id" value="<?= $row['id'] ?>">
-        <br><br>
-        <center>
-            <h1>Edit your instructions</hi> <br><br>
-        </center>
-        <textarea name="instruccion" id="summernote" class="input"><?= $row['instruccion'] ?></textarea>
-        <script>
-            $(document).ready(function () {
-                $('#summernote').summernote();
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow">
+                    <div class="card-header bg-white py-3">
+                        <h2 class="text-center fw-bold text-primary mb-0">Edit your instructions</h2>
+                    </div>
+                    <div class="card-body p-4">
+                        <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
+                            <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                            <div class="mb-4">
+                                <textarea name="instruccion" id="summernote" class="input"><?= $row['instruccion'] ?></textarea>
+                            </div>
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="submit" class="btn btn-success px-4 py-2" name="editar">
+                                    <i class="fas fa-sync-alt me-2"></i>Update
+                                </button>
+                                <a href="index.php" class="btn btn-danger px-4 py-2">
+                                    <i class="fas fa-arrow-left me-2"></i>Back
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#summernote').summernote({
+                placeholder: 'Edit your instruction here...',
+                height: 300,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
             });
-        </script>
-        <br>
-        <button type="submit" class="success" name="editar">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="update"
-                viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z" />
-                <path
-                    d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466" />
-            </svg><span class="espacio">-</span>Update
-        </button>
-    </form>
-    <a href="index.php"><button class="danger">← Back</button></a>
+        });
+    </script>
+
+    <style>
+         @font-face {
+      font-family: "Poppins";
+      src: url("assets/fonts/poppins/Poppins-Regular.woff2") format("woff2"),
+        url("assets/fonts/poppins/Poppins-Regular.woff") format("woff"),
+        url("assets/fonts/poppins/Poppins-Regular.ttf") format("truetype");
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 300;
+      src: url('assets/fonts/poppins/Poppins-Light.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 400;
+      src: url('assets/fonts/poppins/Poppins-Regular.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 500;
+      src: url('assets/fonts/poppins/Poppins-Medium.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 600;
+      src: url('assets/fonts/poppins/Poppins-SemiBold.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 700;
+      src: url('assets/fonts/poppins/Poppins-Bold.ttf') format('truetype');
+    }
+
+    :root {
+      --primary-color: #2575fc;
+      --secondary-color: #1a5bbf;
+      --dark-color: #343a40;
+      --light-color: #f8f9fa;
+    }
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .btn-success, .btn-danger {
+            font-weight: 500;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-success:hover {
+            background-color: #0d8a52;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-danger:hover {
+            background-color: #d32f2f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card {
+            border-radius: 10px;
+            border: none;
+        }
+        
+        .card-header {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .note-editor {
+            border-radius: 5px;
+        }
+    </style>
 </body>
-
 </html>
-
-
-<style>
-    @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-
-    .espacio {
-        color: #04AA6D;
-    }
-
-    h1 {
-        font-family: "Poppins", sans-serif;
-    }
-
-    .success {
-        float: left;
-        font-family: "Poppins", sans-serif;
-        border: none;
-        color: white;
-        width: 130px;
-        text-align: center;
-        padding: 14px 28px;
-        cursor: pointer;
-        border-radius: 5px;
-        display: inline-flex;
-    }
-
-    .success {
-        background-color: #04AA6D;
-    }
-
-    .success:hover {
-        background-color: #46a049;
-    }
-
-    .danger {
-        float: right;
-        font-family: "Poppins", sans-serif;
-        border: none;
-        color: white;
-        padding: 14px 28px;
-        cursor: pointer;
-        border-radius: 5px;
-        display: inline-flex;
-    }
-
-    .danger {
-        background-color: #f44336;
-    }
-
-    .danger:hover {
-        background: #da190b;
-    }
-</style>

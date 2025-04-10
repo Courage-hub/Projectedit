@@ -33,6 +33,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['source'])) {
     );
 
     // Crear nueva base de datos en el destino
+    if ($_POST['db_exists'] === 'yes') {
+        // Eliminar la base de datos si ya existe
+        $target->query("DROP DATABASE IF EXISTS " . $_POST['new_db']);
+        echo "Base de datos eliminada y recreada.";
+    }
+
+    // Crear la base de datos
     $target->query("CREATE DATABASE IF NOT EXISTS " . $_POST['new_db']);
     $target->select_db($_POST['new_db']);
 
@@ -113,113 +120,15 @@ if (isset($_GET['reset'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Professional Database Migrator</title>
     <link rel="stylesheet" href="assets/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/all.min.css"> <!-- Font Awesome -->
     <style>
-        @font-face {
-            font-family: "Poppins";
-            src: url("assets/fonts/poppins/Poppins-Regular.woff2") format("woff2"),
-                url("assets/fonts/poppins/Poppins-Regular.woff") format("woff"),
-                url("assets/fonts/poppins/Poppins-Regular.ttf") format("truetype");
-            font-weight: normal;
-            font-style: normal;
+        /* Bordes más redondeados para toda la página */
+        .card, .btn, .form-control, .input-group, .table, .alert, .toast{
+            border-radius:1rem !important; /* Ajusta el valor según lo que necesites */
         }
 
-        @font-face {
-            font-family: 'Poppins';
-            font-style: normal;
-            font-weight: 300;
-            src: url('assets/fonts/poppins/Poppins-Light.ttf') format('truetype');
-        }
-
-        @font-face {
-            font-family: 'Poppins';
-            font-style: normal;
-            font-weight: 400;
-            src: url('assets/fonts/poppins/Poppins-Regular.ttf') format('truetype');
-        }
-
-        @font-face {
-            font-family: 'Poppins';
-            font-style: normal;
-            font-weight: 500;
-            src: url('assets/fonts/poppins/Poppins-Medium.ttf') format('truetype');
-        }
-
-        @font-face {
-            font-family: 'Poppins';
-            font-style: normal;
-            font-weight: 600;
-            src: url('assets/fonts/poppins/Poppins-SemiBold.ttf') format('truetype');
-        }
-
-        @font-face {
-            font-family: 'Poppins';
-            font-style: normal;
-            font-weight: 700;
-            src: url('assets/fonts/poppins/Poppins-Bold.ttf') format('truetype');
-        }
-
-        :root {
-            --primary-color: #3498db;
-            --secondary-color: #2c3e50;
-            --accent-color: #e74c3c;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f7fa;
-        }
-
-        .card {
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            border: none;
-        }
-
-        .card-header {
-            background-color: var(--secondary-color);
-            color: white;
-            border-radius: 10px 10px 0 0 !important;
-        }
-
-        .table-container {
-            max-height: 500px;
-            overflow-y: auto;
-        }
-
-        .table thead th {
-            position: sticky;
-            top: 0;
-            background-color: #f8f9fa;
-            z-index: 10;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
-        .btn-warning {
-            background-color: #f39c12;
-            border-color: #f39c12;
-        }
-
-        .edit-cell {
-            transition: background-color 0.3s;
-        }
-
-        .edit-cell:focus {
-            background-color: #fffde7;
-            outline: 2px solid var(--primary-color);
-        }
-
-        .table-hover tbody tr:hover {
-            background-color: rgba(52, 152, 219, 0.1);
-        }
-
-        .password-toggle {
-            cursor: pointer;
+        .card-header{
+            border-radius: 1rem 1rem 0 0 !important; /* Bordes redondeados solo en la parte superior */
         }
     </style>
 </head>
@@ -232,7 +141,8 @@ if (isset($_GET['reset'])) {
                     <!-- Improved initial form -->
                     <div class="card shadow-lg">
                         <div class="card-header">
-                            <h2 class="mb-0 text-center"><i class="bi bi-database"></i> Database migration from V.5 to V.6</h2>
+                            <h2 class="mb-0 text-center"><i class="bi bi-database"></i> Database migration from EDIT_V.5 to
+                                EDIT_V.6</h2>
                         </div>
                         <div class="card-body">
                             <form method="post">
@@ -240,7 +150,7 @@ if (isset($_GET['reset'])) {
                                     <div class="col-md-6">
                                         <div class="card mb-4">
                                             <div class="card-header bg-primary text-white">
-                                                <h3 class="mb-0"><i class=""></i>Server 1 (V.5)</h3>
+                                                <h3 class="mb-0"><i class="fa fa-server"></i> Server 1 (V.5)</h3>
                                             </div>
                                             <div class="card-body">
                                                 <div class="mb-3">
@@ -276,7 +186,7 @@ if (isset($_GET['reset'])) {
                                     <div class="col-md-6">
                                         <div class="card mb-4">
                                             <div class="card-header bg-success text-white">
-                                                <h3 class="mb-0"><i class=""></i>Server 2 (V.6)</h3>
+                                                <h3 class="mb-0"><i class="fa fa-server"></i> Server 2 (V.6)</h3>
                                             </div>
                                             <div class="card-body">
                                                 <div class="mb-3">
@@ -311,8 +221,8 @@ if (isset($_GET['reset'])) {
                                 </div>
 
                                 <div class="text-center mt-3">
-                                    <button type="submit" class="btn btn-primary btn-lg">
-                                        <i class="  "></i> Start Migration
+                                    <button type="button" class="btn btn-primary btn-lg" id="startMigration">
+                                        <i class="fa fa-arrow-right"></i> Start Migration
                                     </button>
                                 </div>
                             </form>
@@ -326,10 +236,10 @@ if (isset($_GET['reset'])) {
                             <h2 class="mb-0"><i class="bi bi-pencil-square"></i> Database Editor</h2>
                             <div>
                                 <button id="save-changes" class="btn btn-warning me-2">
-                                    <i class="bi bi-save"></i> Save Changes
+                                    <i class="fa fa-save"></i> Save Changes
                                 </button>
                                 <a href="?reset=1" class="btn btn-secondary">
-                                    <i class="bi bi-arrow-left"></i> Back
+                                    <i class="fa fa-arrow-left"></i> Back
                                 </a>
                             </div>
                         </div>
@@ -350,7 +260,7 @@ if (isset($_GET['reset'])) {
                                             <h3 class="mb-0"><?= htmlspecialchars($table[0]) ?></h3>
                                             <button class="btn btn-sm btn-outline-primary rename-btn"
                                                 data-table="<?= htmlspecialchars($table[0]) ?>">
-                                                <i class="bi bi-pencil"></i> Rename
+                                                <i class="fa fa-pencil-alt"></i> Rename
                                             </button>
                                         </div>
                                         <div class="card-body">
@@ -395,7 +305,7 @@ if (isset($_GET['reset'])) {
                         <div class="card-footer text-end">
                             <form method="post">
                                 <button type="submit" name="migrate" class="btn btn-success btn-lg">
-                                    <i class="bi bi-check-circle"></i> Migrate Database
+                                    <i class="fa fa-check-circle"></i> Migrate Database
                                 </button>
                             </form>
                         </div>
@@ -409,7 +319,7 @@ if (isset($_GET['reset'])) {
                         </div>
                         <div class="card-body text-center">
                             <div class="mb-4">
-                                <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+                                <i class="fa fa-check-circle text-success" style="font-size: 5rem;"></i>
                                 <h3 class="mt-3">Migration Successful!</h3>
                             </div>
 
@@ -448,10 +358,10 @@ if (isset($_GET['reset'])) {
 
                 if (input.attr('type') === 'password') {
                     input.attr('type', 'text');
-                    icon.removeClass('bi-eye').addClass('bi-eye-slash');
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
                 } else {
                     input.attr('type', 'password');
-                    icon.removeClass('bi-eye-slash').addClass('bi-eye');
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
                 }
             });
 
@@ -518,6 +428,30 @@ if (isset($_GET['reset'])) {
             });
         });
     </script>
+    <script>
+    document.getElementById('startMigration').addEventListener('click', function () {
+        const userResponse = confirm("Is the database already created on server 2?s");
+        const form = document.querySelector('form');
+
+        if (userResponse) {
+            // Si el usuario dice que la base de datos ya está creada
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'db_exists';
+            input.value = 'yes';
+            form.appendChild(input);
+        } else {
+            // Si el usuario dice que no sabe o no está creada
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'db_exists';
+            input.value = 'no';
+            form.appendChild(input);
+        }
+
+        form.submit();
+    });
+</script>
 </body>
 
 </html>

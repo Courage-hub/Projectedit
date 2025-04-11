@@ -33,7 +33,8 @@
 
     if (isset($_POST['editar'])) {
         $id = $_POST['id'];
-        $titulo = mysqli_real_escape_string($conn, $_POST['instruccion']);
+        $titulo = mysqli_real_escape_string($conn, $_POST['titulo']);
+        $instruccion = mysqli_real_escape_string($conn, $_POST['instruccion']);
         $user_id = $_SESSION['id'];
 
         // Verificar si el usuario actual es el creador del registro
@@ -42,7 +43,7 @@
 
         if (mysqli_num_rows($check_result) > 0) {
             // Actualizar el registro si el usuario es el creador
-            $sql = "UPDATE fpproject SET instruccion='$titulo' WHERE id=$id";
+            $sql = "UPDATE fpproject SET titulo='$titulo', instruccion='$instruccion' WHERE id=$id";
             $result = mysqli_query($conn, $sql);
 
             if ($result) {
@@ -88,9 +89,20 @@
                     <div class="card-body p-4">
                         <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
                             <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                            
+                            <!-- Campo para el título -->
                             <div class="mb-4">
+                                <label for="titulo" class="form-label fw-bold">Title</label>
+                                <input type="text" id="titulo" name="titulo" class="form-control" 
+                                       value="<?= htmlspecialchars($row['titulo']) ?>" required>
+                            </div>
+                            
+                            <!-- Campo para las instrucciones -->
+                            <div class="mb-4">
+                                <label for="summernote" class="form-label fw-bold">Instructions</label>
                                 <textarea name="instruccion" id="summernote" class="input"><?= $row['instruccion'] ?></textarea>
                             </div>
+                            
                             <div class="d-flex justify-content-between mt-4">
                                 <button type="submit" class="btn btn-success px-4 py-2" name="editar">
                                     <i class="fas fa-sync-alt me-2"></i>Update

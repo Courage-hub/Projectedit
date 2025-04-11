@@ -16,19 +16,19 @@ if (isset($_POST['logout'])) {
 }
 
 $id = isset($_GET['id']) ? $_GET['id'] : '';
-$instruccion = isset($_GET['instruccion']) ? $_GET['instruccion'] : '';
+$titulo = isset($_GET['titulo']) ? $_GET['titulo'] : '';
 
 $query = "SELECT * FROM fpproject";
-if ($id || $instruccion) {
+if ($id || $titulo) {
   $query .= " WHERE";
   if ($id) {
     $query .= " id = '$id'";
   }
-  if ($id && $instruccion) {
+  if ($id && $titulo) {
     $query .= " AND";
   }
-  if ($instruccion) {
-    $query .= " instruccion LIKE '%$instruccion%'";
+  if ($titulo) {
+    $query .= " titulo LIKE '%$titulo%'";
   }
 }
 
@@ -357,8 +357,8 @@ $result = mysqli_query($conn, $query);
             value="<?php echo htmlspecialchars($id); ?>">
         </div>
         <div class="col-md-5">
-          <input type="text" class="form-control" name="instruccion" placeholder="Search by Instruction"
-            value="<?php echo htmlspecialchars($instruccion); ?>">
+          <input type="text" class="form-control" name="titulo" placeholder="Search by Title"
+            value="<?php echo htmlspecialchars($titulo ?? ''); ?>">
         </div>
         <div class="col-md-2">
           <button type="submit" class="btn btn-primary-custom w-100">
@@ -375,7 +375,7 @@ $result = mysqli_query($conn, $query);
           <thead>
             <tr>
               <th>ID</th>
-              <th>Instruction</th>
+              <th>Title</th>
               <th>Date</th>
               <th>Actions</th>
             </tr>
@@ -384,7 +384,11 @@ $result = mysqli_query($conn, $query);
             <?php while ($filas = mysqli_fetch_assoc($result)): ?>
               <tr>
                 <td><?php echo $filas['id'] ?></td>
-                <td class="tit"><?php echo $filas['instruccion'] ?></td>
+                <td class="tit">
+                  <a href="actions.php?id=<?php echo $filas['id']; ?>" class="text-decoration-none text-black">
+                    <?php echo htmlspecialchars($filas['titulo']); ?>
+                  </a>
+                </td>
                 <td><?php echo date('d/m/Y H:i', strtotime($filas['date'])); ?></td>
                 <td>
                   <?php if ($filas['user_id'] == $_SESSION['id']): // Verificar si el usuario es el creador ?>

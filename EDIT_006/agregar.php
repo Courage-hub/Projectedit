@@ -31,10 +31,11 @@
   }
 
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $titulo = mysqli_real_escape_string($conn, $_POST['titulo']);
     $instruccion = mysqli_real_escape_string($conn, $_POST['instruccion']);
     $user_id = $_SESSION['id']; // ID del usuario actual
   
-    $query = "INSERT INTO fpproject (instruccion, user_id) VALUES ('$instruccion', '$user_id')";
+    $query = "INSERT INTO fpproject (titulo, instruccion, user_id) VALUES ('$titulo', '$instruccion', '$user_id')";
     if (mysqli_query($conn, $query)) {
       header("Location: index.php");
       exit();
@@ -54,7 +55,14 @@
           </div>
           <div class="card-body p-4">
             <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
+              <!-- Campo para el título -->
               <div class="mb-4">
+                <label for="titulo" class="form-label fw-bold">Title</label>
+                <input type="text" id="titulo" name="titulo" class="form-control" placeholder="Enter the title" required>
+              </div>
+              <!-- Campo para las instrucciones -->
+              <div class="mb-4">
+                <label for="summernote" class="form-label fw-bold">Instructions</label>
                 <textarea id="summernote" name="instruccion"></textarea>
               </div>
               <div class="d-flex justify-content-between mt-4">

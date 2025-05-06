@@ -12,9 +12,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $query->bind_param("sssss", $nombre, $apellido, $departamento, $email, $contraseña);
 
     if ($query->execute()) {
-        $success = "Registro enviado para aprobación.";
+        $success = "Registration submitted for approval.";
     } else {
-        $error = "Error al registrar: " . $conn->error;
+        $error = "Error registering: " . $conn->error;
     }
     $query->close();
     $conn->close();
@@ -22,12 +22,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forvia - Registro</title>
+    <title>Forvia - Register</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="boostrap/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -197,9 +197,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="register-container">
         <div class="brand-section">
             <div class="brand-logo">Forvia</div>
-            <div class="brand-title">Crear Cuenta</div>
+            <div class="brand-title">Create Account</div>
             <div class="brand-description">
-                Únete a nuestra plataforma y comienza a colaborar con tu equipo
+                Join our platform and start collaborating with your team
             </div>
             <div class="mt-4">
                 <i class="fas fa-users fa-3x" style="opacity: 0.8;"></i>
@@ -225,44 +225,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Nombre</label>
-                            <input type="text" class="form-control" name="nombre" placeholder="Nombre" required>
+                            <label class="form-label">First Name</label>
+                            <input type="text" class="form-control" name="nombre" placeholder="First Name" required>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Apellido</label>
-                            <input type="text" class="form-control" name="apellido" placeholder="Apellido" required>
+                            <label class="form-label">Last Name</label>
+                            <input type="text" class="form-control" name="apellido" placeholder="Last Name" required>
                         </div>
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Departamento</label>
+                    <label class="form-label">Department</label>
                     <select class="form-select" name="departamento" required>
-                        <option value="" selected disabled>Selecciona tu departamento</option>
-                        <option value="IT department">Departamento de TI</option>
+                        <option value="" selected disabled>Select your department</option>
+                        <option value="IT department">IT Department</option>
                         <option value="Marketing">Marketing</option>
-                        <option value="Robotics">Robótica</option>
+                        <option value="Robotics">Robotics</option>
                     </select>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Correo Electrónico</label>
-                    <input type="email" class="form-control" name="email" placeholder="tu@email.com" required>
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-control" name="email" placeholder="your@email.com" required>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Contraseña</label>
+                    <label class="form-label">Password</label>
                     <input type="password" class="form-control" name="contraseña" placeholder="••••••••" required>
                 </div>
 
                 <button type="submit" class="btn btn-register w-100">
-                    <i class="fas fa-user-plus me-2"></i> Registrarse
+                    <i class="fas fa-user-plus me-2"></i> Register
                 </button>
 
                 <a href="login.php" class="login-link">
-                    ¿Ya tienes cuenta? Inicia sesión
+                    Already have an account? Log in
                 </a>
             </form>
         </div>

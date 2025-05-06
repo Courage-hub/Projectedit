@@ -13,7 +13,7 @@ if (!isset($_SESSION['nombre']) || !isset($_SESSION['apellido'])) {
 // Verificar si se ha proporcionado un ID válido
 if (isset($_GET['id'])) {
     // Obtener el ID del parámetro de la URL
-    $id = $_GET['id'];
+    $id = intval($_GET['id']);
     $user_id = $_SESSION['id'];
 
     // Verificar si el usuario es el creador del registro
@@ -21,12 +21,21 @@ if (isset($_GET['id'])) {
     $result = mysqli_query($conn, $query);
 
     if (mysqli_num_rows($result) > 0) {
-        // Consulta para eliminar el contenido con el ID proporcionado
-        $delete_query = "DELETE FROM fpproject WHERE id = '$id'";
-        mysqli_query($conn, $delete_query);
-        mysqli_query($conn, "SET @count = 0;");
-        mysqli_query($conn, "UPDATE fpproject SET id = @count:= @count + 1;");
-        mysqli_query($conn, "ALTER TABLE fpproject AUTO_INCREMENT = 1;");
+        // Eliminar el registro
+        $deleteQuery = "DELETE FROM fpproject WHERE id = $id";
+        mysqli_query($conn, $deleteQuery);
+
+        // Reorganizar los IDs
+        $reorderQuery = "SET @row_number = 0";
+        mysqli_query($conn, $reorderQuery);
+
+        $updateIdsQuery = "UPDATE fpproject SET id = (@row_number := @row_number + 1) ORDER BY id";
+        mysqli_query($conn, $updateIdsQuery);
+
+        // Reiniciar el AUTO_INCREMENT
+        $resetAutoIncrement = "ALTER TABLE fpproject AUTO_INCREMENT = 1";
+        mysqli_query($conn, $resetAutoIncrement);
+
         // Redirigir a la página principal con un mensaje de éxito
         header("Location: index.php?success=1");
         exit();

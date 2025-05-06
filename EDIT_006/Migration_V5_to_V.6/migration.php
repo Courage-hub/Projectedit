@@ -63,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['source'])) {
      ****************************************************/
     $sql = "
         ALTER TABLE usuarios ADD COLUMN telefono VARCHAR(20) DEFAULT 'TBD';
+        ALTER TABLE fpproject ADD COLUMN titulo VARCHAR(70) DEFAULT NULL;
     ";
     $target->multi_query($sql);
     /****************************************************/

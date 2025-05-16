@@ -27,6 +27,28 @@ if ($result && odbc_fetch_row($result)) {
 
 // Cerrar el recurso de consulta
 odbc_free_result($result);
+
+// Leer el archivo HTML generado si existe
+$htmlFile = __DIR__ . "/datos/edit_data/edit_{$id}/edit_{$id}.html";
+$htmlContent = '';
+if (file_exists($htmlFile)) {
+    $htmlContent = file_get_contents($htmlFile);
+    $botones = '<div class="action-buttons-container" style="margin-top:2rem;display:flex;justify-content:space-between;align-items:center;">'
+        .'<a href="index.php" class="btn-back"><i class="fas fa-arrow-left me-1"></i> Back to Dashboard</a>'
+        .'<div class="action-buttons">';
+    if ($row['user_id'] == $_SESSION['id']) {
+        $botones .= '<a href="editor.php?id=' . $id . '" class="action-link"><i class="fas fa-edit me-1"></i> Edit</a>';
+        $botones .= '<a href="eliminar.php?id=' . $id . '" class="action-link delete"><i class="fas fa-trash-alt me-1"></i> Delete</a>';
+    } else {
+        $botones .= '<span class="text-muted">No actions available</span>';
+    }
+    $botones .= '</div></div>';
+    // Insertar los botones antes del último </div> (container-main)
+    $htmlContent = preg_replace('/(<\/div>)(?!.*<\/div>)/', $botones.'$1', $htmlContent, 1);
+} else {
+    // Si no existe el archivo, mostrar mensaje o fallback
+    $htmlContent = '<div class="alert alert-warning">No hay contenido estructurado disponible para este registro.</div>';
+}
 ?>
 
 <!DOCTYPE html>
@@ -42,6 +64,9 @@ odbc_free_result($result);
 
     <!-- Font Awesome -->
     <link href="assets/css/all.min.css" rel="stylesheet">
+
+    <!-- SweetAlert2 local -->
+    <link rel="stylesheet" href="assets/css/sweetalert2.min.css">
 
     <style>
         @font-face {
@@ -122,13 +147,13 @@ odbc_free_result($result);
 
         /* Dark mode styles */
         html[data-bs-theme="dark"] body {
-            background-color: #1a1a1a;
-            color: #e0e0e0;
+            background-color: #1a1a1a !important;
+            color: #e0e0e0 !important;
         }
 
         html[data-bs-theme="dark"] .container-main {
-            background-color: #2c2c2c;
-            color: #e0e0e0;
+            background-color: #23272b !important;
+            color: #e0e0e0 !important;
         }
 
         html[data-bs-theme="dark"] .btn-back {
@@ -143,37 +168,40 @@ odbc_free_result($result);
 </head>
 
 <body class="bg-light">
-    <div class="container-main">
-        <h1 class="title"><?php echo htmlspecialchars($row['titulo']); ?></h1>
-        <div class="instruction">
-            <?php echo htmlspecialchars_decode($row['instruccion']); ?>
-        </div>
-
-        <!-- Contenedor para los botones -->
-        <div class="action-buttons-container">
-            <a href="index.php" class="btn-back">
-                <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
-            </a>
-            <div class="action-buttons">
-                <?php if ($row['user_id'] == $_SESSION['id']): // Verificar si el usuario es el creador ?>
-                    <a href="editor.php?id=<?php echo $id; ?>" class="action-link">
-                        <i class="fas fa-edit me-1"></i> Edit
-                    </a>
-                    <a href="eliminar.php?id=<?php echo $id; ?>" class="action-link delete"
-                       onclick="return confirm('Are you sure you want to delete this record?')">
-                        <i class="fas fa-trash-alt me-1"></i> Delete
-                    </a>
-                <?php else: ?>
-                    <span class="text-muted">No actions available</span>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
+    <?php echo $htmlContent; ?>
 
     <!-- Scripts -->
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/darkmode.js"></script>
     <script src="assets/js/fontawesome.min.js"></script>
+    <script src="assets/js/sweetalert2.min.js"></script>
+    <script>
+      // Confirmación moderna para eliminar
+      document.querySelectorAll('.action-link.delete').forEach(link => {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          Swal.fire({
+            title: 'Are you sure?',
+            text: 'Are you sure you want to delete this record?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+            customClass: {
+              popup: 'swal2-popup',
+              confirmButton: 'swal2-confirm',
+              cancelButton: 'swal2-cancel'
+            }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location = link.href;
+            }
+          });
+        });
+      });
+    </script>
 </body>
 
 </html>

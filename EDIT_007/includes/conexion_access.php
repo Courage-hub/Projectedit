@@ -1,23 +1,38 @@
 <?php
-// Variable estática para almacenar la conexión a Access
-static $conexion_access = null;
+// Archivo de bloqueo para controlar el acceso a la BD
+// (Solo para Access ODBC)
+define('LOCK_FILE', sys_get_temp_dir() . '/access_odbc_lock');
+define('MAX_WAIT_TIME', 10); // Tiempo máximo de espera en segundos
 
-// Función para obtener la conexión a Access
+require_once __DIR__ . '/config.php';
+
 function obtenerConexionAccess() {
-    global $conexion_access;
-    if ($conexion_access === null) {
-        $conexion_access = odbc_connect("MiAccessDSN", "", ""); // Cambia "MiAccessDSN" por tu DSN de Access
-        if (!$conexion_access) {
-            die("❌ Error de conexión Access: " . odbc_errormsg());
-        }
+    static $conexion_access = null;
+
+    // Si ya existe y es válida, la devolvemos
+    if ($conexion_access !== null && is_resource($conexion_access)) {
+        return $conexion_access;
+    }
+
+    // Si existe pero no es válida, cerramos
+    if ($conexion_access !== null) {
+        @odbc_close($conexion_access);
+        $conexion_access = null;
+    }
+
+    // Conexión ODBC a Access
+    $conexion_access = @odbc_connect(DSN_ACCESS, '', '');
+    if (!$conexion_access) {
+        die("❌ Error de conexión Access: " . odbc_errormsg());
     }
     return $conexion_access;
 }
 
 // Registrar función para cerrar la conexión al finalizar el script
-register_shutdown_function(function () use (&$conexion_access) {
-    if (is_resource($conexion_access)) {
-        odbc_close($conexion_access);
+register_shutdown_function(function () {
+    static $conexion_access = null;
+    if ($conexion_access !== null && is_resource($conexion_access)) {
+        @odbc_close($conexion_access);
         $conexion_access = null;
     }
 });

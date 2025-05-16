@@ -17,7 +17,7 @@ if (isset($_POST['logout'])) {
 $id = intval($_SESSION["id"]);
 
 // Obtener la conexión
-$conexion_access = obtenerConexionAccess(); // Asegúrate de obtener la conexión
+$conexion_access = obtenerConexionAccess(); // Singleton, no cerrar manualmente
 
 // Obtener datos del usuario
 $query = "SELECT nombre, apellido, email, departamento, descripcion, foto FROM usuarios WHERE id = $id";
@@ -32,15 +32,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $descripcion = isset($_POST['descripcion']) ? substr($_POST['descripcion'], 0, 150) : $user['descripcion'];
   $fotoNombre = $user['foto'];
 
+  // Crear carpeta específica para el usuario
+  $userDir = "uploads/user_$id";
+  if (!is_dir($userDir)) {
+    mkdir($userDir, 0777, true);
+  }
+
   // Subir nueva foto si se proporciona
   if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
-    $fotoNombre = "uploads/perfil_" . $id . "_" . time() . ".jpg";
-    move_uploaded_file($_FILES['foto']['tmp_name'], $fotoNombre);
+    // Eliminar la foto anterior si existe
+    if (!empty($fotoNombre) && file_exists($fotoNombre)) {
+      unlink($fotoNombre);
+    }
+
+    $fotoNombre = "$userDir/perfil_" . time() . ".jpg";
+    if (!move_uploaded_file($_FILES['foto']['tmp_name'], $fotoNombre)) {
+      die("Error: No se pudo mover el archivo subido.");
+    }
   }
 
   // Guardar foto capturada desde la cámara
   if (isset($_POST['foto_capturada']) && !empty($_POST['foto_capturada'])) {
-    $fotoNombre = "uploads/perfil_" . $id . "_" . time() . ".png";
+    // Eliminar la foto anterior si existe
+    if (!empty($fotoNombre) && file_exists($fotoNombre)) {
+      unlink($fotoNombre);
+    }
+
+    $fotoNombre = "$userDir/perfil_" . time() . ".png";
     file_put_contents($fotoNombre, base64_decode(explode(",", $_POST['foto_capturada'])[1]));
   }
 
@@ -51,6 +69,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Actualizar los datos del usuario en la página
   $user['descripcion'] = $descripcion;
   $user['foto'] = $fotoNombre;
+
+  // Redirigir para evitar reenvío y mostrar toast
+  header("Location: perfil.php?success=1");
+  exit();
 }
 ?>
 
@@ -66,6 +88,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <!-- Font Awesome local -->
   <link href="assets/css/fontawesome.min.css" rel="stylesheet">
   <link href="assets/css/solid.min.css" rel="stylesheet">
+  <!-- SweetAlert2 local -->
+  <link rel="stylesheet" href="assets/css/sweetalert2.min.css">
   <style>
     @font-face {
       font-family: 'Poppins';
@@ -123,27 +147,135 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       min-height: 100vh;
     }
 
+    /* Animación de entrada para el body (fade + scale + slide up) */
+    .body-animate {
+      animation: fadeInScale 0.7s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.97) translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
     .navbar {
-      background-color: white;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      padding: 0.8rem 1rem;
+      background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      box-shadow: 0 4px 18px rgba(37, 117, 252, 0.10);
+      padding: 1rem 2rem;
+      border-radius: 0 0 18px 18px;
     }
 
     .navbar-brand {
       font-weight: 700;
-      font-size: 1.5rem;
-      color: var(--primary-color) !important;
+      font-size: 1.7rem;
+      color: #fff !important;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 8px rgba(37,117,252,0.15);
     }
 
     .nav-link {
-      color: var(--dark-color) !important;
+      color: #e0e0e0 !important;
       font-weight: 500;
-      padding: 0.5rem 1rem;
-      transition: all 0.3s ease;
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      margin-right: 0.3rem;
+      transition: background 0.2s, color 0.2s;
     }
 
-    .nav-link:hover {
-      color: var(--primary-color) !important;
+    .nav-link.active, .nav-link:hover {
+      background: rgba(255,255,255,0.13);
+      color: #fff !important;
+    }
+
+    html[data-bs-theme="dark"] body {
+      background-color: #1a1a1a;
+      color: #e0e0e0;
+    }
+
+    html[data-bs-theme="dark"] .navbar {
+      background: linear-gradient(90deg, #1a5bbf 0%, #2575fc 100%) !important;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+    }
+
+    html[data-bs-theme="dark"] .navbar-brand {
+      color: #fff !important;
+      text-shadow: 0 2px 8px rgba(37,117,252,0.25);
+    }
+
+    html[data-bs-theme="dark"] .nav-link {
+      color: #e0e0e0 !important;
+    }
+
+    html[data-bs-theme="dark"] .nav-link.active, html[data-bs-theme="dark"] .nav-link:hover {
+      background: rgba(255,255,255,0.10);
+      color: #fff !important;
+    }
+
+    html[data-bs-theme="dark"] .profile-card {
+      background-color: #23272b !important;
+      color: #e0e0e0 !important;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    }
+    html[data-bs-theme="dark"] .profile-content {
+      background: none;
+      color: #e0e0e0;
+    }
+    html[data-bs-theme="dark"] .profile-image-container {
+      background-color: #181a1b !important;
+      border-left: 1px solid #333 !important;
+      color: #e0e0e0;
+    }
+    html[data-bs-theme="dark"] .profile-title {
+      color: #6fdc8c !important;
+    }
+    html[data-bs-theme="dark"] .profile-info strong {
+      color: #b0b0b0 !important;
+    }
+    html[data-bs-theme="dark"] .form-control, html[data-bs-theme="dark"] textarea.form-control {
+      background-color: #23272b;
+      color: #e0e0e0;
+      border-color: #444;
+    }
+    html[data-bs-theme="dark"] .form-control:focus, html[data-bs-theme="dark"] textarea.form-control:focus {
+      background-color: #23272b;
+      color: #e0e0e0;
+      border-color: #6fdc8c;
+    }
+    html[data-bs-theme="dark"] .file-upload-btn {
+      background: #23272b;
+      color: #6fdc8c;
+      border-color: #6fdc8c;
+    }
+    html[data-bs-theme="dark"] .file-upload-btn:hover {
+      background: #6fdc8c;
+      color: #23272b;
+    }
+    html[data-bs-theme="dark"] .btn-primary-custom {
+      background-color: #6fdc8c;
+      color: #23272b;
+      border-color: #6fdc8c;
+    }
+    html[data-bs-theme="dark"] .btn-primary-custom:hover {
+      background-color: #4bbf73;
+      color: #fff;
+    }
+    html[data-bs-theme="dark"] .btn-outline-primary-custom {
+      border-color: #6fdc8c;
+      color: #6fdc8c;
+    }
+    html[data-bs-theme="dark"] .btn-outline-primary-custom:hover {
+      background-color: #6fdc8c;
+      color: #23272b;
+    }
+    html[data-bs-theme="dark"] .form-label, html[data-bs-theme="dark"] label {
+      color: #b0b0b0;
+    }
+    html[data-bs-theme="dark"] .text-muted {
+      color: #b0b0b0 !important;
     }
 
     .container-main {
@@ -326,75 +458,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         height: 150px;
       }
     }
-
-    /* Dark mode specific styles */
-    html[data-bs-theme="dark"] body {
-      background-color: #1a1a1a;
-      color: #e0e0e0;
-    }
-
-    html[data-bs-theme="dark"] .navbar {
-      background-color: #2c2c2c !important;
-      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
-    }
-
-    html[data-bs-theme="dark"] .user-greeting,
-    html[data-bs-theme="dark"] .search-form,
-    html[data-bs-theme="dark"] .table-container,
-    html[data-bs-theme="dark"] .profile-content,
-    html[data-bs-theme="dark"] .profile-image-container {
-      background-color: #2c2c2c;
-      color: #e0e0e0;
-    }
-
-    html[data-bs-theme="dark"] .table thead th {
-      background-color: #1a5bbf;
-      color: white;
-    }
-
-    html[data-bs-theme="dark"] .table tbody tr:hover {
-      background-color: rgba(37, 117, 252, 0.2);
-    }
-
-    html[data-bs-theme="dark"] .form-control {
-      background-color: #3a3a3a;
-      color: #e0e0e0;
-      border-color: #4a4a4a;
-    }
-
-    html[data-bs-theme="dark"] .form-control:focus,
-    html[data-bs-theme="dark"] #camara {
-      background-color: #4a4a4a;
-      color: #e0e0e0;
-    }
   </style>
 </head>
 
-<body>
-  <!-- Navigation Bar -->
+<body class="body-animate">
   <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="index.php">Forvia</a>
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+        <i class="fas fa-tasks fa-lg text-primary"></i> Forvia
+      </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link" href="index.php">Home</a>
+            <a class="nav-link" href="index.php"><i class="fas fa-home me-1"></i>Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="perfil.php">Profile</a>
+            <a class="nav-link active" href="perfil.php"><i class="fas fa-user me-1"></i>Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="mytasks.php"><i class="fas fa-list-check me-1"></i>My Tasks</a>
           </li>
           <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] == 'admin'): ?>
             <li class="nav-item">
-              <a class="nav-link" href="admin.php">Administration</a>
+              <a class="nav-link" href="admin.php"><i class="fas fa-cogs me-1"></i>Administration</a>
             </li>
           <?php endif; ?>
         </ul>
-        <form method="POST" class="d-flex">
-          <!-- Dark Mode Toggle -->
-          <button id="darkModeToggle" class="btn btn-outline-secondary me-1">
+        <form method="POST" class="d-flex align-items-center gap-2">
+          <button id="darkModeToggle" class="btn btn-outline-secondary" type="button" title="Toggle dark mode">
             <i class="fas fa-moon"></i>
           </button>
           <button type="submit" name="logout" class="btn btn-outline-danger">
@@ -472,7 +566,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <script src="assets/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/darkmode.js"></script>
   <script src="assets/js/fontawesome.min.js"></script>
+  <script src="assets/js/sweetalert2.min.js"></script>
   <script>
+    // Animación de entrada para el body al cargar la página
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.classList.add('body-animate');
+    });
+
     let mediaStream = null;
 
     function abrirCamara() {
@@ -480,7 +580,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       navigator.mediaDevices.getUserMedia({ video: true })
         .then(stream => {
           mediaStream = stream;
-          document.getElementById('video').srcObject = stream;
+          const video = document.getElementById('video');
+          video.srcObject = stream;
+          video.play();
         })
         .catch(err => {
           console.error("Error al acceder a la cámara: ", err);
@@ -501,21 +603,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       const canvas = document.getElementById('canvas');
       const context = canvas.getContext('2d');
 
-      // Detener la transmisión de video
-      if (mediaStream) {
-        mediaStream.getTracks().forEach(track => track.stop());
-        mediaStream = null;
+      // Asegurarse de que el video esté listo antes de capturar
+      if (video.readyState === video.HAVE_ENOUGH_DATA) {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        const fotoBase64 = canvas.toDataURL('image/png');
+        document.getElementById('foto_capturada').value = fotoBase64;
+        document.getElementById('foto_perfil_preview').src = fotoBase64;
+
+        cerrarCamara();
+      } else {
+        alert('El video no está listo para capturar la foto. Intenta nuevamente.');
       }
-
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-      const fotoBase64 = canvas.toDataURL('image/png');
-      document.getElementById('foto_capturada').value = fotoBase64;
-      document.getElementById('foto_perfil_preview').src = fotoBase64;
-
-      document.getElementById('camara').style.display = 'none';
     }
 
     // Mostrar vista previa al seleccionar archivo
@@ -533,6 +634,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     document.querySelector('.file-upload-btn').addEventListener('click', function () {
       this.nextElementSibling.click();
     });
+
+    // Confirmación moderna para eliminar (en perfil, si aplica)
+    document.querySelectorAll('.action-link.delete').forEach(link => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        Swal.fire({
+          title: 'Are you sure?',
+          text: 'Are you sure you want to delete this record?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'Yes, delete it!',
+          cancelButtonText: 'Cancel',
+          customClass: {
+            popup: 'swal2-popup',
+            confirmButton: 'swal2-confirm',
+            cancelButton: 'swal2-cancel'
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location = link.href;
+          }
+        });
+      });
+    });
+
+    // Mostrar toast si hay parámetros success en la URL
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('success')) {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          title: 'Perfil actualizado correctamente',
+          showConfirmButton: false,
+          timer: 2500,
+          timerProgressBar: true
+        });
+      }
+    })();
   </script>
 </body>
 

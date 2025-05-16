@@ -114,25 +114,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   // Manejar aprobación/denegación de registros
   if (isset($_POST['id'], $_POST['accion'])) {
-    $id = intval($_POST['id']);
-    $accion = $_POST['accion'];
+    try {
+      $id = intval($_POST['id']);
+      $accion = $_POST['accion'];
 
-    if ($accion == 'aprobar') {
-      $query = "UPDATE usuarios SET aprobado = TRUE WHERE id = $id";
-      $result = odbc_exec($conexion_access, $query);
-      if ($result) {
-        $success = "Usuario aprobado correctamente.";
-      } else {
-        $error = "Error al aprobar usuario: " . odbc_errormsg($conexion_access);
+      // Desactivar warnings temporalmente
+      $error_reporting = error_reporting(0);
+      
+      if ($accion == 'aprobar') {
+        $query = "UPDATE usuarios SET aprobado = TRUE WHERE id = $id";
+        $result = @odbc_exec($conexion_access, $query);
+        if ($result) {
+          $success = "Usuario aprobado correctamente.";
+        }
+      } elseif ($accion == 'denegar') {
+        $query = "DELETE FROM usuarios WHERE id = $id";
+        $result = @odbc_exec($conexion_access, $query);
+        if ($result) {
+          $success = "Usuario denegado correctamente.";
+        }
       }
-    } elseif ($accion == 'denegar') {
-      $query = "DELETE FROM usuarios WHERE id = $id";
-      $result = odbc_exec($conexion_access, $query);
-      if ($result) {
-        $success = "Usuario denegado correctamente.";
-      } else {
-        $error = "Error al denegar usuario: " . odbc_errormsg($conexion_access);
+      
+      // Restaurar error reporting
+      error_reporting($error_reporting);
+      
+      if (!$result) {
+        throw new Exception("Error al procesar la solicitud");
       }
+      
+    } catch (Exception $e) {
+      $error = "Error: " . $e->getMessage();
     }
   }
 }
@@ -156,6 +167,9 @@ if (ob_get_length()) {
   <!-- Font Awesome local -->
   <link href="assets/css/fontawesome.min.css" rel="stylesheet">
   <link href="assets/css/solid.min.css" rel="stylesheet">
+
+  <!-- SweetAlert2 local -->
+  <link rel="stylesheet" href="assets/css/sweetalert2.min.css">
 
   <style>
     @font-face {
@@ -217,28 +231,63 @@ if (ob_get_length()) {
       color: #333;
     }
 
-    .navbar {
-      background-color: white;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      padding: 0.8rem 1rem;
+    /* Animación de entrada para el body (fade + scale + slide up) */
+    .body-animate {
+      animation: fadeInScale 0.7s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.97) translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
     }
 
+    /* --- NAVBAR UNIFICADA --- */
+    .navbar {
+      background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      box-shadow: 0 4px 18px rgba(37, 117, 252, 0.10);
+      padding: 1rem 2rem;
+      border-radius: 0 0 18px 18px;
+    }
     .navbar-brand {
       font-weight: 700;
-      font-size: 1.5rem;
-      color: var(--primary-color) !important;
+      font-size: 1.7rem;
+      color: #fff !important;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 8px rgba(37,117,252,0.15);
     }
-
     .nav-link {
-      color: var(--dark-color) !important;
+      color: #e0e0e0 !important;
       font-weight: 500;
-      padding: 0.5rem 1rem;
-      transition: all 0.3s ease;
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      margin-right: 0.3rem;
+      transition: background 0.2s, color 0.2s;
     }
-
-    .nav-link:hover {
-      color: var(--primary-color) !important;
+    .nav-link.active, .nav-link:hover {
+      background: rgba(255,255,255,0.13);
+      color: #fff !important;
     }
+    html[data-bs-theme="dark"] .navbar {
+      background: linear-gradient(90deg, #1a5bbf 0%, #2575fc 100%) !important;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+    }
+    html[data-bs-theme="dark"] .navbar-brand {
+      color: #fff !important;
+      text-shadow: 0 2px 8px rgba(37,117,252,0.25);
+    }
+    html[data-bs-theme="dark"] .nav-link {
+      color: #e0e0e0 !important;
+    }
+    html[data-bs-theme="dark"] .nav-link.active, html[data-bs-theme="dark"] .nav-link:hover {
+      background: rgba(255,255,255,0.10);
+      color: #fff !important;
+    }
+    /* --- FIN NAVBAR UNIFICADA --- */
 
     .nav-tabs .nav-link.active {
       color: var(--primary-color) !important;
@@ -305,7 +354,7 @@ if (ob_get_length()) {
     }
 
     .container-main {
-      padding: 2rem;
+      padding: 1rem;
       max-width: 1200px;
       margin: 0 auto;
     }
@@ -362,7 +411,6 @@ if (ob_get_length()) {
       .container-main {
         padding: 1rem;
       }
-
       .table-responsive {
         overflow-x: auto;
       }
@@ -409,51 +457,56 @@ if (ob_get_length()) {
   </style>
 </head>
 
-<body>
-  <!-- Navigation Bar -->
-  <nav class="navbar navbar-expand-lg navbar-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="index.php">Forvia</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="index.php">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="perfil.php">Profile</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="admin.php">Administration</a>
-          </li>
-        </ul>
-        <!-- Dark Mode Toggle -->
-        <button id="darkModeToggle" class="btn btn-outline-secondary me-1">
-          <i class="fas fa-moon"></i>
-        </button>
-        <form method="POST" class="d-flex">
-          <button type="submit" name="logout" class="btn btn-outline-danger">
-            <i class="fas fa-sign-out-alt me-1"></i> Log Out
-          </button>
-        </form>
-      </div>
-    </div>
-  </nav>
+<body class="body-animate">
+ <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+                <i class="fas fa-tasks fa-lg text-primary"></i> Forvia
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php"><i class="fas fa-home me-1"></i>Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="perfil.php"><i class="fas fa-user me-1"></i>Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mytasks.php"><i class="fas fa-list-check me-1"></i>My Tasks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="admin.php"><i class="fas fa-cogs me-1"></i>Administration</a>
+                    </li>
+                </ul>
+
+                <form method="POST" class="d-flex align-items-center gap-2">
+                    <button id="darkModeToggle" class="btn btn-outline-secondary" type="button" title="Toggle dark mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button type="submit" name="logout" class="btn btn-outline-danger">
+                        <i class="fas fa-sign-out-alt me-1"></i> Log Out
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
 
   <!-- Main Content -->
   <div class="container-main">
     <?php if (isset($success)): ?>
       <div class="alert alert-success alert-dismissible fade show">
-        <?php echo $success; ?>
+        <?= htmlspecialchars($success ?? '') ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
       </div>
     <?php endif; ?>
 
     <?php if (isset($error)): ?>
       <div class="alert alert-danger alert-dismissible fade show">
-        <?php echo $error; ?>
+        <?= htmlspecialchars($error ?? '') ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
       </div>
     <?php endif; ?>
@@ -482,7 +535,14 @@ if (ob_get_length()) {
       <div class="tab-pane fade show active" id="pendientes" role="tabpanel">
         <?php
         $hasPendientes = false;
-        while ($row = odbc_fetch_array($result_pendientes)) {
+        // Desactivar warnings temporalmente
+        $error_reporting = error_reporting(0);
+        while ($row = @odbc_fetch_array($result_pendientes)) {
+          // Restaurar error reporting
+          error_reporting($error_reporting);
+          // Saltar registros inválidos o eliminados
+          if (!is_array($row) || empty($row['id']) || strpos(serialize($row), '*') !== false) continue;
+          
           if (!$hasPendientes) {
             $hasPendientes = true;
             echo '<div class="table-responsive table-container"><table class="table table-hover"><thead><tr>
@@ -491,20 +551,20 @@ if (ob_get_length()) {
           }
           ?>
           <tr>
-            <td><?php echo $row['id']; ?></td>
-            <td><?php echo htmlspecialchars($row['nombre']); ?></td>
-            <td><?php echo htmlspecialchars($row['apellido']); ?></td>
-            <td><?php echo htmlspecialchars($row['departamento']); ?></td>
-            <td><?php echo htmlspecialchars($row['email']); ?></td>
+            <td><?= htmlspecialchars($row['id'] ?? '') ?></td>
+            <td><?= htmlspecialchars($row['nombre'] ?? '') ?></td>
+            <td><?= htmlspecialchars($row['apellido'] ?? '') ?></td>
+            <td><?= htmlspecialchars($row['departamento'] ?? '') ?></td>
+            <td><?= htmlspecialchars($row['email'] ?? '') ?></td>
             <td>
               <form method="POST" class="d-inline">
-                <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                <input type="hidden" name="id" value="<?= htmlspecialchars($row['id'] ?? '') ?>">
                 <button type="submit" name="accion" value="aprobar" class="btn btn-success-custom me-2">
                   <i class="fas fa-check me-1"></i> Approve
                 </button>
               </form>
               <form method="POST" class="d-inline">
-                <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                <input type="hidden" name="id" value="<?= htmlspecialchars($row['id'] ?? '') ?>">
                 <button type="submit" name="accion" value="denegar" class="btn btn-danger-custom"
                   onclick="return confirm('Are you sure you want to deny this user?')">
                   <i class="fas fa-times me-1"></i> Deny
@@ -540,37 +600,52 @@ if (ob_get_length()) {
               </tr>
             </thead>
             <tbody>
-              <?php while ($usuario = odbc_fetch_array($result_usuarios)): ?>
+              <?php
+              // Desactivar temporalmente los warnings
+              $error_reporting = error_reporting(0);
+              
+              // Reiniciar el puntero y obtener registros
+              odbc_fetch_row($result_usuarios, 0);
+              while (true) {
+                  $usuario = odbc_fetch_array($result_usuarios);
+                  // Restaurar configuración de errores
+                  error_reporting($error_reporting);
+                  
+                  if ($usuario === false || !is_array($usuario) || empty($usuario['id'])) break;
+                  
+                  // Skip deleted records
+                  if (strpos(serialize($usuario), '*') !== false) continue;
+              ?>
                 <tr>
-                  <td><?php echo $usuario['id']; ?></td>
+                  <td><?= htmlspecialchars($usuario['id'] ?? '') ?></td>
                   <td>
-                    <span class="editable-field" data-id="<?php echo $usuario['id']; ?>" data-field="nombre"
+                    <span class="editable-field" data-id="<?= htmlspecialchars($usuario['id'] ?? '') ?>" data-field="nombre"
                       contenteditable="true">
-                      <?php echo htmlspecialchars($usuario['nombre']); ?>
+                      <?= htmlspecialchars($usuario['nombre'] ?? '') ?>
                     </span>
                   </td>
                   <td>
-                    <span class="editable-field" data-id="<?php echo $usuario['id']; ?>" data-field="apellido"
+                    <span class="editable-field" data-id="<?= htmlspecialchars($usuario['id'] ?? '') ?>" data-field="apellido"
                       contenteditable="true">
-                      <?php echo htmlspecialchars($usuario['apellido']); ?>
+                      <?= htmlspecialchars($usuario['apellido'] ?? '') ?>
                     </span>
                   </td>
                   <td>
-                    <span class="editable-field" data-id="<?php echo $usuario['id']; ?>" data-field="departamento"
+                    <span class="editable-field" data-id="<?= htmlspecialchars($usuario['id'] ?? '') ?>" data-field="departamento"
                       contenteditable="true">
-                      <?php echo htmlspecialchars($usuario['departamento']); ?>
+                      <?= htmlspecialchars($usuario['departamento'] ?? '') ?>
                     </span>
                   </td>
                   <td>
-                    <span class="editable-field" data-id="<?php echo $usuario['id']; ?>" data-field="email"
+                    <span class="editable-field" data-id="<?= htmlspecialchars($usuario['id'] ?? '') ?>" data-field="email"
                       contenteditable="true">
-                      <?php echo htmlspecialchars($usuario['email']); ?>
+                      <?= htmlspecialchars($usuario['email'] ?? '') ?>
                     </span>
                   </td>
                   <td>
-                    <span class="editable-field" data-id="<?php echo $usuario['id']; ?>" data-field="rol"
+                    <span class="editable-field" data-id="<?= htmlspecialchars($usuario['id'] ?? '') ?>" data-field="rol"
                       contenteditable="true">
-                      <?php echo htmlspecialchars($usuario['rol']); ?>
+                      <?= htmlspecialchars($usuario['rol'] ?? '') ?>
                     </span>
                   </td>
                   <td>
@@ -582,12 +657,12 @@ if (ob_get_length()) {
                   </td>
                   <td>
                     <button class="btn btn-sm btn-outline-danger"
-                      onclick="confirmarEliminacion(<?php echo $usuario['id']; ?>)">
+                      onclick="confirmarEliminacion(<?= htmlspecialchars($usuario['id'] ?? '') ?>)">
                       <i class="fas fa-trash-alt"></i> Delete
                     </button>
                   </td>
                 </tr>
-              <?php endwhile; ?>
+              <?php } ?>
             </tbody>
           </table>
         </div>
@@ -599,7 +674,13 @@ if (ob_get_length()) {
   <script src="assets/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/darkmode.js"></script>
   <script src="assets/js/fontawesome.min.js"></script>
+  <script src="assets/js/sweetalert2.min.js"></script>
   <script>
+    // Animación de entrada para el body al cargar la página
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.classList.add('body-animate');
+    });
+
     // Función para manejar la edición de campos
     document.querySelectorAll('.editable-field').forEach(field => {
       let originalValue = field.textContent.trim();
@@ -662,36 +743,51 @@ if (ob_get_length()) {
         });
     }
 
+    // Confirmación moderna para eliminar usuario (admin)
     function confirmarEliminacion(id) {
-      if (confirm('¿Estás seguro de eliminar este usuario permanentemente?')) {
-        fetch('admin.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: `ajax_delete=1&id=${id}`
-        })
-          .then(response => {
-            if (!response.ok) throw new Error('Error en red');
-            return response.json();
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'Are you sure you want to delete this user permanently?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel',
+        customClass: {
+          popup: 'swal2-popup',
+          confirmButton: 'swal2-confirm',
+          cancelButton: 'swal2-cancel'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch('admin.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `ajax_delete=1&id=${id}`
           })
-          .then(data => {
-            if (!data || data.success !== true) {
-              throw new Error(data?.message || 'Error en servidor');
-            }
-            location.reload();
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            alert('Error al eliminar: ' + error.message);
-          });
-      }
+            .then(response => {
+              if (!response.ok) throw new Error('Network error');
+              return response.json();
+            })
+            .then(data => {
+              if (!data || data.success !== true) {
+                throw new Error(data?.message || 'Server error');
+              }
+              location.reload();
+            })
+            .catch(error => {
+              Swal.fire('Error', 'Error deleting: ' + error.message, 'error');
+            });
+        }
+      });
     }
   </script>
 </body>
 
 </html>
 <?php
-// Cerrar la conexión
-odbc_close($conexion_access);
+// No cierres la conexión manualmente al final del archivo
 ?>

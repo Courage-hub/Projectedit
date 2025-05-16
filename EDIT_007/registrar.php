@@ -1,22 +1,11 @@
 <?php
 include("includes/conexion_access.php"); // Cambia la conexión a Access
-include("includes/conexion_mysql.php"); // Conexión a MySQL
 
-function ejecutarConsulta($query, $db) {
-    global $conexion_access, $conexion_mysql;
-
-    if ($db === 'access' || $db === 'both') {
-        $result_access = odbc_exec($conexion_access, $query);
-        if (!$result_access) {
-            throw new Exception("Access DB Error: " . odbc_errormsg($conexion_access));
-        }
-    }
-
-    if ($db === 'mysql' || $db === 'both') {
-        $result_mysql = mysqli_query($conexion_mysql, $query);
-        if (!$result_mysql) {
-            throw new Exception("MySQL DB Error: " . mysqli_error($conexion_mysql));
-        }
+function ejecutarConsulta($query) {
+    $conexion_access = obtenerConexionAccess();
+    $result_access = odbc_exec($conexion_access, $query);
+    if (!$result_access) {
+        throw new Exception("Access DB Error: " . odbc_errormsg($conexion_access));
     }
 }
 
@@ -27,12 +16,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $departamento = str_replace("'", "''", $_POST['departamento']);
         $email = str_replace("'", "''", $_POST['email']);
         $clave = password_hash($_POST['clave'], PASSWORD_BCRYPT);
+        $rol = "usuario";
 
-        $query = "INSERT INTO usuarios (nombre, apellido, departamento, email, [clave], aprobado) 
-                  VALUES ('$nombre', '$apellido', '$departamento', '$email', '$clave', FALSE)";
+        // Usar comillas simples para campos en Access
+        $query_access = "INSERT INTO usuarios (nombre, apellido, departamento, email, [clave], aprobado, rol) 
+                  VALUES ('$nombre', '$apellido', '$departamento', '$email', '$clave', FALSE, '$rol')";
 
-        // Usar la función para insertar en ambas bases de datos
-        ejecutarConsulta($query, 'both');
+        // Insertar en Access
+        ejecutarConsulta($query_access);
         
         $success = "Registration submitted for approval.";
     } catch (Exception $e) {
@@ -48,14 +39,55 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forvia - Register</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="boostrap/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="boostrap/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/all.min.css" rel="stylesheet">
+    <link href="assets/fonts/poppins/Poppins-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
     <style>
+                @font-face {
+            font-family: "Poppins";
+            src: url("assets/fonts/poppins/Poppins-Regular.woff2") format("woff2"),
+                url("assets/fonts/poppins/Poppins-Regular.woff") format("woff"),
+                url("assets/fonts/poppins/Poppins-Regular.ttf") format("truetype");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 300;
+            src: url('assets/fonts/poppins/Poppins-Light.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 400;
+            src: url('assets/fonts/poppins/Poppins-Regular.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 500;
+            src: url('assets/fonts/poppins/Poppins-Medium.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 600;
+            src: url('assets/fonts/poppins/Poppins-SemiBold.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 700;
+            src: url('assets/fonts/poppins/Poppins-Bold.ttf') format('truetype');
+        }
+
         :root {
             --primary-color: #2575fc;
             --secondary-color: #1a5bbf;
@@ -288,7 +320,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets\js\botstrap.bundle.min.js"></script>
 </body>
 
 </html>

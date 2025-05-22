@@ -63,18 +63,14 @@ if (file_exists($htmlFile)) {
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Font Awesome -->
-    <link href="assets/css/all.min.css" rel="stylesheet">
-
-    <!-- SweetAlert2 local -->
+    <link href="assets/css/all.min.css" rel="stylesheet">    <!-- SweetAlert2 local -->
     <link rel="stylesheet" href="assets/css/sweetalert2.min.css">
+    
+    <!-- Estilos globales -->
+    <link href="assets/css/style.css" rel="stylesheet">
 
     <style>
-        @font-face {
-            font-family: "Poppins";
-            src: url("assets/fonts/poppins/Poppins-Regular.woff2") format("woff2"),
-                url("assets/fonts/poppins/Poppins-Regular.woff") format("woff"),
-                url("assets/fonts/poppins/Poppins-Regular.ttf") format("truetype");
-        }
+        /* Estilos específicos para details.php (si se requieren) */
 
         body {
             font-family: 'Poppins', sans-serif;

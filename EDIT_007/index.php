@@ -11,10 +11,14 @@ if (!isset($_SESSION['id'])) {
 }
 
 require_once("includes/conexion_access.php");
-require_once("includes/functions.php"); // Asegúrate de que esta línea esté correcta
+require_once("includes/functions.php");
+require_once("includes/catch.php");
 
 // Obtener la conexión
 $conexion_access = obtenerConexionAccess();
+if (!$conexion_access) {
+  mostrarErrorConexion();
+}
 
 // Cerrar sesión
 if (isset($_POST['logout'])) {
@@ -34,32 +38,33 @@ $offset = ($page - 1) * $limit;
 $count_query = "SELECT COUNT(*) AS total FROM fpproject";
 $where = [];
 if ($id) {
-    $where[] = "id = $id";
+  $where[] = "id = $id";
 }
 if ($titulo) {
-    $titulo = str_replace("'", "''", $titulo);
-    $where[] = "titulo LIKE '%$titulo%'";
+  $titulo = str_replace("'", "''", $titulo);
+  $where[] = "titulo LIKE '%$titulo%'";
 }
 if ($where) {
-    $count_query .= " WHERE " . implode(" AND ", $where);
+  $count_query .= " WHERE " . implode(" AND ", $where);
 }
 $count_result = odbc_exec($conexion_access, $count_query);
 $total_registros = 0;
 if ($count_result && odbc_fetch_row($count_result)) {
-    $total_registros = odbc_result($count_result, 'total');
+  $total_registros = odbc_result($count_result, 'total');
 }
 $total_pages = max(1, ceil($total_registros / $limit));
 
 // Consulta paginada
 $query = "SELECT * FROM (SELECT TOP $limit * FROM (SELECT TOP " . ($offset + $limit) . " * FROM fpproject";
 if ($where) {
-    $query .= " WHERE " . implode(" AND ", $where);
+  $query .= " WHERE " . implode(" AND ", $where);
 }
 $query .= " ORDER BY id DESC) AS t1 ORDER BY id ASC) AS t2 ORDER BY id DESC";
 
+// Consulta principal
 $result_access = odbc_exec($conexion_access, $query);
 if (!$result_access) {
-  die("Error al obtener datos de Access: " . odbc_errormsg($conexion_access));
+  mostrarErrorPersonalizado("Error al obtener datos de Access: " . odbc_errormsg($conexion_access));
 }
 
 $filas = [];
@@ -147,13 +152,15 @@ odbc_free_result($result_access);
 
     /* Animación de entrada alternativa para el body */
     .body-animate {
-      animation: fadeInScale 0.7s cubic-bezier(.4,0,.2,1);
+      animation: fadeInScale 0.7s cubic-bezier(.4, 0, .2, 1);
     }
+
     @keyframes fadeInScale {
       from {
         opacity: 0;
         transform: scale(0.97) translateY(40px);
       }
+
       to {
         opacity: 1;
         transform: scale(1) translateY(0);
@@ -172,7 +179,7 @@ odbc_free_result($result_access);
       font-size: 1.7rem;
       color: #fff !important;
       letter-spacing: 1px;
-      text-shadow: 0 2px 8px rgba(37,117,252,0.15);
+      text-shadow: 0 2px 8px rgba(37, 117, 252, 0.15);
     }
 
     .nav-link {
@@ -184,38 +191,46 @@ odbc_free_result($result_access);
       transition: background 0.2s, color 0.2s;
     }
 
-    .nav-link.active, .nav-link:hover {
-      background: rgba(255,255,255,0.13);
+    .nav-link.active,
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.13);
       color: #fff !important;
     }
 
-    .btn-primary-custom, .btn-outline-custom, .btn-outline-primary, .btn-primary {
+    .btn-primary-custom,
+    .btn-outline-custom,
+    .btn-outline-primary,
+    .btn-primary {
       border-radius: 10px;
       font-weight: 600;
-      box-shadow: 0 2px 8px rgba(37,117,252,0.08);
+      box-shadow: 0 2px 8px rgba(37, 117, 252, 0.08);
       letter-spacing: 0.5px;
     }
 
-    .btn-primary-custom, .btn-primary {
+    .btn-primary-custom,
+    .btn-primary {
       background: linear-gradient(90deg, var(--primary-color) 60%, var(--secondary-color) 100%);
       color: #fff;
       border: none;
     }
 
-    .btn-primary-custom:hover, .btn-primary:hover {
+    .btn-primary-custom:hover,
+    .btn-primary:hover {
       background: linear-gradient(90deg, var(--secondary-color) 0%, var(--primary-color) 100%);
       color: #fff;
-      box-shadow: 0 4px 16px rgba(37,117,252,0.18);
+      box-shadow: 0 4px 16px rgba(37, 117, 252, 0.18);
       transform: translateY(-2px) scale(1.03);
     }
 
-    .btn-outline-primary, .btn-outline-custom {
+    .btn-outline-primary,
+    .btn-outline-custom {
       border: 2px solid var(--primary-color);
       color: var(--primary-color);
       background: transparent;
     }
 
-    .btn-outline-primary:hover, .btn-outline-custom:hover {
+    .btn-outline-primary:hover,
+    .btn-outline-custom:hover {
       background: var(--primary-color);
       color: #fff;
       border-color: var(--primary-color);
@@ -231,7 +246,7 @@ odbc_free_result($result_access);
       background: linear-gradient(90deg, #fff 60%, #f5f9ff 100%);
       border-radius: 18px;
       padding: 2.2rem 2rem 2rem 2rem;
-      box-shadow: 0 6px 32px rgba(37,117,252,0.07);
+      box-shadow: 0 6px 32px rgba(37, 117, 252, 0.07);
       margin-bottom: 2.2rem;
       border: 1.5px solid #e3eafc;
     }
@@ -247,7 +262,7 @@ odbc_free_result($result_access);
       background: #fff;
       border-radius: 14px;
       padding: 1.5rem 2rem;
-      box-shadow: 0 2px 12px rgba(37,117,252,0.06);
+      box-shadow: 0 2px 12px rgba(37, 117, 252, 0.06);
       margin-bottom: 2rem;
       border: 1.5px solid #e3eafc;
     }
@@ -271,7 +286,7 @@ odbc_free_result($result_access);
     .table-container {
       background: #fff;
       border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(37,117,252,0.07);
+      box-shadow: 0 4px 24px rgba(37, 117, 252, 0.07);
       overflow: hidden;
       border: 1.5px solid #e3eafc;
     }
@@ -322,7 +337,7 @@ odbc_free_result($result_access);
 
     .pagination {
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(37,117,252,0.07);
+      box-shadow: 0 2px 8px rgba(37, 117, 252, 0.07);
       background: #fff;
       padding: 0.5rem 1rem;
       margin-bottom: 0.5rem;
@@ -333,7 +348,7 @@ odbc_free_result($result_access);
       color: #fff;
       border: none;
       font-weight: 600;
-      box-shadow: 0 2px 8px rgba(37,117,252,0.13);
+      box-shadow: 0 2px 8px rgba(37, 117, 252, 0.13);
     }
 
     .page-link {
@@ -355,7 +370,7 @@ odbc_free_result($result_access);
       flex-direction: column;
       height: 100%;
       border-radius: 16px;
-      box-shadow: 0 4px 18px rgba(37,117,252,0.10);
+      box-shadow: 0 4px 18px rgba(37, 117, 252, 0.10);
       border: 1.5px solid #e3eafc;
       background: #fff;
       transition: background 0.2s, color 0.2s;
@@ -377,7 +392,7 @@ odbc_free_result($result_access);
     .card:hover {
       background: linear-gradient(90deg, var(--primary-color) 60%, var(--secondary-color) 100%);
       color: #fff;
-      box-shadow: 0 8px 32px rgba(37,117,252,0.18);
+      box-shadow: 0 8px 32px rgba(37, 117, 252, 0.18);
     }
 
     .card:hover .card-title,
@@ -393,20 +408,21 @@ odbc_free_result($result_access);
 
     html[data-bs-theme="dark"] .navbar {
       background: linear-gradient(90deg, #1a5bbf 0%, #2575fc 100%) !important;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
     }
 
     html[data-bs-theme="dark"] .navbar-brand {
       color: #fff !important;
-      text-shadow: 0 2px 8px rgba(37,117,252,0.25);
+      text-shadow: 0 2px 8px rgba(37, 117, 252, 0.25);
     }
 
     html[data-bs-theme="dark"] .nav-link {
       color: #e0e0e0 !important;
     }
 
-    html[data-bs-theme="dark"] .nav-link.active, html[data-bs-theme="dark"] .nav-link:hover {
-      background: rgba(255,255,255,0.10);
+    html[data-bs-theme="dark"] .nav-link.active,
+    html[data-bs-theme="dark"] .nav-link:hover {
+      background: rgba(255, 255, 255, 0.10);
       color: #fff !important;
     }
 
@@ -471,9 +487,14 @@ odbc_free_result($result_access);
       .container-main {
         padding: 0.5rem;
       }
-      .user-greeting, .search-form, .table-container, .card {
+
+      .user-greeting,
+      .search-form,
+      .table-container,
+      .card {
         padding: 1rem !important;
       }
+
       .table-responsive {
         overflow-x: auto;
       }
@@ -482,7 +503,7 @@ odbc_free_result($result_access);
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light">
+  <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
       <a class="navbar-brand d-flex align-items-center gap-2" href="#">
         <i class="fas fa-tasks fa-lg text-primary"></i> Forvia
@@ -526,7 +547,8 @@ odbc_free_result($result_access);
       <div class="col-lg-8">
         <div class="user-greeting h-100 d-flex flex-column justify-content-center">
           <h1 class="welcome-title mb-2"><i class="fas fa-user-circle me-2"></i>Client Task - Forvia</h1>
-          <p class="lead mb-2">Welcome, <span class="fw-bold text-primary"><?php echo $_SESSION['nombre'] . ' ' . $_SESSION['apellido']; ?></span></p>
+          <p class="lead mb-2">Welcome, <span
+              class="fw-bold text-primary"><?php echo $_SESSION['nombre'] . ' ' . $_SESSION['apellido']; ?></span></p>
           <div class="d-flex gap-2 mt-2">
             <a href="agregar.php" class="btn btn-primary-custom">
               <i class="fas fa-plus me-1"></i> New Record
@@ -537,15 +559,20 @@ odbc_free_result($result_access);
       <div class="col-lg-4 d-flex flex-column justify-content-between">
         <div class="row g-2 flex-grow-1">
           <div class="col-12 h-100 d-flex flex-column justify-content-between">
-            <div class="card shadow-sm border-0 bg-gradient h-100 d-flex flex-column justify-content-center align-items-center total-records-card"
+            <div
+              class="card shadow-sm border-0 bg-gradient h-100 d-flex flex-column justify-content-center align-items-center total-records-card"
               style="background: linear-gradient(90deg, #f5f9ff 0%, #e3eafc 100%); min-height: 140px; box-shadow: 0 8px 32px rgba(37,117,252,0.18); border-radius: 18px;">
               <div class="card-body d-flex flex-column align-items-center justify-content-center gap-2 p-4 w-100">
-                <i class="fas fa-database fa-2x mb-2 gradient-text" style="background: linear-gradient(90deg, #2575fc 0%, #1a5bbf 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent;"></i>
+                <i class="fas fa-database fa-2x mb-2 gradient-text"
+                  style="background: linear-gradient(90deg, #2575fc 0%, #1a5bbf 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent;"></i>
                 <div class="text-center w-100">
-                  <div class="fs-2 fw-bold mb-1 gradient-text" style="background: linear-gradient(90deg, #2575fc 0%, #1a5bbf 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; letter-spacing: 1px;">
+                  <div class="fs-2 fw-bold mb-1 gradient-text"
+                    style="background: linear-gradient(90deg, #2575fc 0%, #1a5bbf 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; letter-spacing: 1px;">
                     <?php echo $total_registros; ?>
                   </div>
-                  <div class="small gradient-text" style="background: linear-gradient(90deg, #2575fc 0%, #1a5bbf 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; font-size: 1.1rem; font-weight: 500;">Total Records</div>
+                  <div class="small gradient-text"
+                    style="background: linear-gradient(90deg, #2575fc 0%, #1a5bbf 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; font-size: 1.1rem; font-weight: 500;">
+                    Total Records</div>
                 </div>
               </div>
             </div>
@@ -628,19 +655,19 @@ odbc_free_result($result_access);
           </div>
         </div>
         <?php if ($total_pages > 1): ?>
-        <nav aria-label="Page navigation example" class="mb-4">
-          <ul class="pagination justify-content-center">
-            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-              <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
-                <a class="page-link" href="?<?php
+          <nav aria-label="Page navigation example" class="mb-4">
+            <ul class="pagination justify-content-center">
+              <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
+                  <a class="page-link" href="?<?php
                   $params = $_GET;
                   $params['page'] = $i;
                   echo http_build_query($params);
-                ?>"><?php echo $i; ?></a>
-              </li>
-            <?php endfor; ?>
-          </ul>
-        </nav>
+                  ?>"><?php echo $i; ?></a>
+                </li>
+              <?php endfor; ?>
+            </ul>
+          </nav>
         <?php endif; ?>
         <div id="access-card-container" class="row g-3 mt-4 d-none">
           <?php foreach ($filas as $fila): ?>
@@ -650,8 +677,10 @@ odbc_free_result($result_access);
                   <div class="card-body">
                     <h5 class="card-title fw-bold text-primary"><?php echo htmlspecialchars($fila['titulo']); ?></h5>
                     <p class="card-text mb-2">
-                      <span class="badge bg-primary bg-opacity-75 me-2"><i class="fas fa-hashtag"></i> <?php echo $fila['id']; ?></span><br>
-                      <span class="text-muted small"><i class="fas fa-calendar-alt me-1"></i> <?php echo !empty($fila['date']) ? date('d/m/Y H:i', strtotime($fila['date'])) : 'N/A'; ?></span>
+                      <span class="badge bg-primary bg-opacity-75 me-2"><i class="fas fa-hashtag"></i>
+                        <?php echo $fila['id']; ?></span><br>
+                      <span class="text-muted small"><i class="fas fa-calendar-alt me-1"></i>
+                        <?php echo !empty($fila['date']) ? date('d/m/Y H:i', strtotime($fila['date'])) : 'N/A'; ?></span>
                     </p>
                     <div class="card-actions">
                       <?php if ($fila['user_id'] == $_SESSION['id']): ?>
@@ -673,19 +702,19 @@ odbc_free_result($result_access);
           <?php endforeach; ?>
         </div>
         <?php if ($total_pages > 1): ?>
-        <nav aria-label="Page navigation example" class="mt-4">
-          <ul class="pagination justify-content-center">
-            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-              <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
-                <a class="page-link" href="?<?php
+          <nav aria-label="Page navigation example" class="mt-4">
+            <ul class="pagination justify-content-center">
+              <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
+                  <a class="page-link" href="?<?php
                   $params = $_GET;
                   $params['page'] = $i;
                   echo http_build_query($params);
-                ?>"><?php echo $i; ?></a>
-              </li>
-            <?php endfor; ?>
-          </ul>
-        </nav>
+                  ?>"><?php echo $i; ?></a>
+                </li>
+              <?php endfor; ?>
+            </ul>
+          </nav>
         <?php endif; ?>
       </div>
     </div>
@@ -759,7 +788,7 @@ odbc_free_result($result_access);
       });
 
       // Mostrar toast si hay parámetros success o error en la URL
-      (function() {
+      (function () {
         const params = new URLSearchParams(window.location.search);
         if (params.get('success')) {
           Swal.fire({
@@ -786,4 +815,5 @@ odbc_free_result($result_access);
     </script>
   </div>
 </body>
+
 </html>

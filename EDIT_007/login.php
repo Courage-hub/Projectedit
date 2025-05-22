@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once("includes/catch.php");
 require_once("includes/conexion_access.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -7,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Verificar conexión
     if (!$conexion_access) {
-        die("❌ Error de conexión a la base de datos: " . odbc_errormsg());
+        mostrarErrorConexion();
     }
 
     $email = $_POST['email'];
@@ -20,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Verificar consulta
     if (!$result) {
-        die("❌ Error al ejecutar la consulta: " . odbc_errormsg($conexion_access));
+        mostrarErrorPersonalizado("Error al ejecutar la consulta: " . odbc_errormsg($conexion_access));
     }
 
     if ($result && odbc_fetch_row($result)) {
@@ -31,21 +32,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'rol' => odbc_result($result, 'rol'),
             'clave' => odbc_result($result, 'clave')
         ];
-
-        // Asegúrate de que los datos recuperados de Access no tengan espacios adicionales
         $usuario['clave'] = trim($usuario['clave']);
-
-        // Verificar si la clave está definida y no es nula
         if (empty($usuario['clave']) || !is_string($usuario['clave'])) {
-            $error = "Error interno: la clave no está definida o es inválida para este usuario.";
+            mostrarErrorPersonalizado("Error interno: la clave no está definida o es inválida para este usuario.");
         } else {
-            // Registro temporal para depuración
-            error_log("Hash recuperado de Access: " . $usuario['clave']);
-            error_log("Clave ingresada: " . $clave);
-
             if (password_verify($clave, $usuario['clave'])) {
-                // Registro temporal para verificar coincidencia
-                error_log("La contraseña ingresada coincide con el hash almacenado.");
                 $_SESSION['id'] = $usuario['id'];
                 $_SESSION['nombre'] = $usuario['nombre'];
                 $_SESSION['apellido'] = $usuario['apellido'];
@@ -64,15 +55,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("Location: index.php");
                 exit();
             } else {
-                // Registro temporal para depuración
-                error_log("Hash almacenado: " . $usuario['clave']);
-                error_log("Hash generado para la contraseña ingresada: " . password_hash($clave, PASSWORD_BCRYPT));
-                error_log("La contraseña ingresada no coincide con el hash almacenado.");
-                $error = "Clave incorrecta.";
+                mostrarErrorPersonalizado("Clave incorrecta.");
             }
         }
     } else {
-        $error = "Usuario no encontrado o no aprobado.";
+        mostrarErrorPersonalizado("Usuario no encontrado o no aprobado.");
     }
 
     // Cerrar el recurso de consulta
@@ -154,7 +141,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             align-items: center;
             justify-content: center;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            overflow: hidden;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .login-card {

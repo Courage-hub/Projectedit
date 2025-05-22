@@ -2,7 +2,7 @@
   $servername = "localhost";
   $username = "root";
   $password = "";
-  $database = "fpproject";
+  $database = "edit_0006";
 
   // Crear conexión
   $conn = new mysqli($servername, $username, $password, $database);

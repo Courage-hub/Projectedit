@@ -244,7 +244,7 @@
         ?>
           <tr>
             <td><?php echo $filas['id'] ?></td>
-            <td><?php echo $filas['usuario'] ?></td>
+        
             <td><?php echo $filas['instruccion'] ?></td>
             <td><?php echo date('l jS \of F Y h:i:s A')?></td>
             <td><?php echo "<a href='editor.php?id=" . $filas['id'] . "'>Edit</a>";  ?>

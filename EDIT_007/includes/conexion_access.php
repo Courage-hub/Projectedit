@@ -5,6 +5,7 @@ define('LOCK_FILE', sys_get_temp_dir() . '/access_odbc_lock');
 define('MAX_WAIT_TIME', 10); // Tiempo máximo de espera en segundos
 
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/catch.php';
 
 function obtenerConexionAccess() {
     static $conexion_access = null;
@@ -23,7 +24,7 @@ function obtenerConexionAccess() {
     // Conexión ODBC a Access
     $conexion_access = @odbc_connect(DSN_ACCESS, '', '');
     if (!$conexion_access) {
-        die("❌ Error de conexión Access: " . odbc_errormsg());
+        mostrarErrorConexion();
     }
     return $conexion_access;
 }

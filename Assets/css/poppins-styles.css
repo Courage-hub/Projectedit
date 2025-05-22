@@ -1,0 +1,93 @@
+/* 
+  FORVIA - Archivo de estilos adicionales
+  Fecha: 16 de mayo de 2025
+  Este archivo añade estilos para la fuente Poppins y el menú blanco
+*/
+
+/* Aplicar fuente Poppins a todo el sitio */
+body, 
+h1, h2, h3, h4, h5, h6,
+p, a, span, div, button, input, select, textarea {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+/* Estilos para el header blanco */
+.header {
+  background: white !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+}
+
+.header::before {
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZyBmaWxsPSIjMDAwIiBmaWxsLW9wYWNpdHk9IjAuMDMiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PGNpcmNsZSBjeD0iMTAiIGN5PSIxMCIgcj0iMiIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iMTAiIHI9IjIiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjEwIiByPSIyIi8+PGNpcmNsZSBjeD0iMTAiIGN5PSIzMCIgcj0iMiIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjIiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjMwIiByPSIyIi8+PGNpcmNsZSBjeD0iMTAiIGN5PSI1MCIgcj0iMiIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iNTAiIHI9IjIiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIyIi8+PC9nPjwvc3ZnPg==') !important;
+}
+
+/* Estilo para el enlace de registro */
+.registration-link {
+  font-weight: 500;
+  color: var(--primary-color) !important;
+  text-decoration: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  background-color: rgba(37, 117, 252, 0.05) !important;
+  border: 1.5px solid rgba(37, 117, 252, 0.2) !important;
+  transition: all 0.3s ease;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.registration-link:hover {
+  background-color: rgba(37, 117, 252, 0.1) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  color: var(--primary-dark) !important;
+}
+
+/* Mejorar estilos de las tarjetas de versión */
+.version-card {
+  margin-bottom: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+.version-card::before {
+  background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+}
+
+.version-card .card-title {
+  letter-spacing: 0.5px;
+}
+
+.version-card .btn {
+  letter-spacing: 0.3px;
+  font-weight: 500;
+}
+
+/* Ajustes para modo oscuro */
+.dark-mode .header {
+  background: #1e1e1e !important;
+}
+
+.dark-mode .registration-link {
+  color: white !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.dark-mode .registration-link:hover {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+}
+
+/* Estilo para la bienvenida */
+.welcome-section {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+.welcome-section h1, 
+.welcome-section h2 {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+/* Espacio para las tarjetas de versiones */
+.versions-section .row > div {
+  padding: 10px 15px;
+}

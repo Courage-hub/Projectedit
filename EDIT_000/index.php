@@ -1,5 +1,5 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "fpproject");
+$conn = mysqli_connect("localhost", "root", "", "edit_0006");
 
 if(isset($_POST["submit"])){
   $titulo = $_POST["titulo"];

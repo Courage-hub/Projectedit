@@ -38,27 +38,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forvia - Register</title>
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <title>Forvia - Register</title>    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/all.min.css" rel="stylesheet">
     <link href="assets/fonts/poppins/Poppins-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <!-- Estilos globales -->
+    <link href="assets/css/style.css" rel="stylesheet">
 
     <style>
-                @font-face {
-            font-family: "Poppins";
-            src: url("assets/fonts/poppins/Poppins-Regular.woff2") format("woff2"),
-                url("assets/fonts/poppins/Poppins-Regular.woff") format("woff"),
-                url("assets/fonts/poppins/Poppins-Regular.ttf") format("truetype");
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        @font-face {
-            font-family: 'Poppins';
-            font-style: normal;
-            font-weight: 300;
-            src: url('assets/fonts/poppins/Poppins-Light.ttf') format('truetype');
-        }
+        /* Estilos específicos para registrar.php (si se requieren) */
 
         @font-face {
             font-family: 'Poppins';

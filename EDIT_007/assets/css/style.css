@@ -1,0 +1,509 @@
+/* 
+  FORVIA - Archivo de estilos globales
+  Fecha: 16 de mayo de 2025
+  Este archivo contiene todos los estilos del proyecto EDIT_007
+*/
+
+/* ===== FUENTES ===== */
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/poppins/Poppins-Regular.woff2") format("woff2"),
+       url("../fonts/poppins/Poppins-Regular.woff") format("woff"),
+       url("../fonts/poppins/Poppins-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 300;
+  src: url('../fonts/poppins/Poppins-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/poppins/Poppins-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  src: url('../fonts/poppins/Poppins-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  src: url('../fonts/poppins/Poppins-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../fonts/poppins/Poppins-Bold.ttf') format('truetype');
+}
+
+/* ===== VARIABLES ===== */
+:root {
+  --primary-color: #2575fc;
+  --secondary-color: #1a5bbf;
+  --danger-color: #dc3545;
+  --success-color: #28a745;
+  --dark-color: #343a40;
+  --light-color: #f8f9fa;
+}
+
+/* ===== ESTILOS GENERALES ===== */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f5f9ff;
+  color: #333;
+}
+
+/* Animación de entrada alternativa para el body */
+.body-animate {
+  animation: fadeInScale 0.7s cubic-bezier(.4,0,.2,1);
+}
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ===== NAVEGACIÓN ===== */
+.navbar {
+  background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  box-shadow: 0 4px 18px rgba(37, 117, 252, 0.10);
+  padding: 1rem 2rem;
+  border-radius: 0 0 18px 18px;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.7rem;
+  color: #fff !important;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 8px rgba(37,117,252,0.15);
+}
+
+.nav-link {
+  color: #e0e0e0 !important;
+  font-weight: 500;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  margin-right: 0.3rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.nav-link.active, .nav-link:hover {
+  background: rgba(255,255,255,0.13);
+  color: #fff !important;
+}
+
+/* ===== BOTONES ===== */
+.btn-primary-custom, .btn-outline-custom, .btn-outline-primary, .btn-primary {
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(37,117,252,0.08);
+  letter-spacing: 0.5px;
+}
+
+.btn-primary-custom, .btn-primary {
+  background: linear-gradient(90deg, var(--primary-color) 60%, var(--secondary-color) 100%);
+  color: #fff;
+  border: none;
+}
+
+.btn-primary-custom:hover, .btn-primary:hover {
+  background: linear-gradient(90deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(37,117,252,0.18);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.btn-outline-primary, .btn-outline-custom {
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+  background: transparent;
+}
+
+.btn-outline-primary:hover, .btn-outline-custom:hover {
+  background: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+}
+
+.btn-outline-danger {
+  border-radius: 10px;
+  font-weight: 600;
+  border-width: 2px;
+}
+
+.btn-success-custom {
+  background-color: var(--success-color);
+  border-color: var(--success-color);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-success-custom:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.btn-danger-custom {
+  background-color: var(--danger-color);
+  border-color: var(--danger-color);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-danger-custom:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+}
+
+/* ===== CONTENEDORES ===== */
+.container-main {
+  padding: 1.5rem 0.5rem 2.5rem 0.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.user-greeting {
+  background: linear-gradient(90deg, #fff 60%, #f5f9ff 100%);
+  border-radius: 18px;
+  padding: 2.2rem 2rem 2rem 2rem;
+  box-shadow: 0 6px 32px rgba(37,117,252,0.07);
+  margin-bottom: 2.2rem;
+  border: 1.5px solid #e3eafc;
+}
+
+.welcome-title {
+  color: var(--primary-color);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  letter-spacing: 0.5px;
+}
+
+.search-form {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 2px 12px rgba(37,117,252,0.06);
+  margin-bottom: 2rem;
+  border: 1.5px solid #e3eafc;
+}
+
+.admin-title {
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+/* ===== FORMULARIOS ===== */
+.form-control {
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  border: 1.5px solid #dee2e6;
+  background: #f8faff;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(37, 117, 252, 0.13);
+  background: #fff;
+  color: #222;
+}
+
+/* ===== TABLAS ===== */
+.table-container {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(37,117,252,0.07);
+  overflow: hidden;
+  border: 1.5px solid #e3eafc;
+  margin-top: 1.5rem;
+}
+
+.table {
+  margin-bottom: 0;
+}
+
+.table thead th {
+  background: linear-gradient(90deg, var(--primary-color) 60%, var(--secondary-color) 100%);
+  color: #fff;
+  border-bottom: none;
+  padding: 1.1rem 0.7rem;
+  font-size: 1.08rem;
+  letter-spacing: 0.5px;
+}
+
+.table tbody tr {
+  transition: background 0.2s;
+}
+
+.table tbody tr:hover {
+  background: rgba(37, 117, 252, 0.07);
+}
+
+/* ===== PESTAÑAS ===== */
+.nav-tabs .nav-link.active {
+  color: var(--primary-color) !important;
+  font-weight: 600;
+  border-bottom: 3px solid var(--primary-color);
+}
+
+.tab-content {
+  background-color: white;
+  border-radius: 0 0 10px 10px;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* ===== ENLACES ===== */
+.action-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  margin-right: 1.1rem;
+  font-size: 1.1rem;
+  transition: color 0.2s;
+}
+
+.action-link:hover {
+  color: var(--secondary-color);
+  text-decoration: underline;
+}
+
+.action-link.delete {
+  color: #dc3545;
+}
+
+.action-link.delete:hover {
+  color: #bb2d3b;
+}
+
+/* ===== TARJETAS ===== */
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(37,117,252,0.10);
+  border: 1.5px solid #e3eafc;
+  background: #fff;
+  transition: background 0.2s, color 0.2s;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.3rem 1.1rem 1.1rem 1.1rem;
+}
+
+.card-actions {
+  margin-top: auto;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.card:hover {
+  background: linear-gradient(90deg, var(--primary-color) 60%, var(--secondary-color) 100%);
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(37,117,252,0.18);
+}
+
+.card:hover .card-title,
+.card:hover .card-text {
+  color: #fff;
+}
+
+/* ===== PAGINACIÓN ===== */
+.pagination {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(37,117,252,0.07);
+  background: #fff;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.page-item.active .page-link {
+  background: linear-gradient(90deg, var(--primary-color) 60%, var(--secondary-color) 100%);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(37,117,252,0.13);
+}
+
+.page-link {
+  color: var(--primary-color);
+  border-radius: 8px;
+  margin: 0 2px;
+  font-weight: 500;
+  border: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.page-link:hover {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+/* ===== ELEMENTOS ESPECIALES ===== */
+.no-records {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+}
+
+.editable-field {
+  cursor: pointer;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s;
+  display: inline-block;
+  min-width: 50px;
+}
+
+.editable-field:hover {
+  background-color: #f0f8ff;
+  box-shadow: 0 0 0 1px #2575fc;
+}
+
+.editable-field:focus {
+  outline: none;
+  background-color: white;
+  box-shadow: 0 0 0 2px #2575fc;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: #2575fc;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== MODO OSCURO ===== */
+html[data-bs-theme="dark"] body {
+  background: #181c23;
+  color: #e0e0e0;
+}
+
+html[data-bs-theme="dark"] .navbar {
+  background: linear-gradient(90deg, #1a5bbf 0%, #2575fc 100%) !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+}
+
+html[data-bs-theme="dark"] .navbar-brand {
+  color: #fff !important;
+  text-shadow: 0 2px 8px rgba(37,117,252,0.25);
+}
+
+html[data-bs-theme="dark"] .nav-link {
+  color: #e0e0e0 !important;
+}
+
+html[data-bs-theme="dark"] .nav-link.active, 
+html[data-bs-theme="dark"] .nav-link:hover {
+  background: rgba(255,255,255,0.10);
+  color: #fff !important;
+}
+
+html[data-bs-theme="dark"] .user-greeting,
+html[data-bs-theme="dark"] .search-form,
+html[data-bs-theme="dark"] .table-container,
+html[data-bs-theme="dark"] .card,
+html[data-bs-theme="dark"] .pagination,
+html[data-bs-theme="dark"] .tab-content {
+  background: #232a36;
+  color: #e0e0e0;
+  border-color: #2c3442;
+}
+
+html[data-bs-theme="dark"] .table thead th {
+  background: linear-gradient(90deg, #1a5bbf 0%, #2575fc 100%);
+  color: #fff;
+}
+
+html[data-bs-theme="dark"] .table tbody tr:hover {
+  background: rgba(37, 117, 252, 0.13);
+}
+
+html[data-bs-theme="dark"] .form-control {
+  background: #232a36;
+  color: #e0e0e0;
+  border-color: #2c3442;
+}
+
+html[data-bs-theme="dark"] .form-control:focus {
+  background: #2c3442;
+  color: #fff;
+}
+
+html[data-bs-theme="dark"] .card:hover {
+  background: linear-gradient(90deg, #1a5bbf 0%, #2575fc 100%);
+  color: #fff;
+}
+
+html[data-bs-theme="dark"] .page-link {
+  background: #232a36;
+  color: #fff;
+  border: none;
+}
+
+html[data-bs-theme="dark"] .page-link:hover {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+html[data-bs-theme="dark"] .page-item.active .page-link {
+  background: linear-gradient(90deg, #1a5bbf 0%, #2575fc 100%);
+  color: #fff;
+}
+
+html[data-bs-theme="dark"] .total-records-card {
+  background: linear-gradient(90deg, #232a36 0%, #1a5bbf 100%) !important;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .container-main {
+    padding: 0.5rem;
+  }
+  .user-greeting, .search-form, .table-container, .card {
+    padding: 1rem !important;
+  }
+  .table-responsive {
+    overflow-x: auto;
+  }
+  .navbar {
+    padding: 0.8rem 1rem;
+  }
+}

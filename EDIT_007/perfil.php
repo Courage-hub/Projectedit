@@ -230,7 +230,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       color: #e0e0e0;
     }
     html[data-bs-theme="dark"] .profile-title {
-      color: #6fdc8c !important;
+      color: #2575fc !important;
     }
     html[data-bs-theme="dark"] .profile-info strong {
       color: #b0b0b0 !important;
@@ -243,32 +243,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     html[data-bs-theme="dark"] .form-control:focus, html[data-bs-theme="dark"] textarea.form-control:focus {
       background-color: #23272b;
       color: #e0e0e0;
-      border-color: #6fdc8c;
+      border-color: #2575fc;
     }
     html[data-bs-theme="dark"] .file-upload-btn {
       background: #23272b;
-      color: #6fdc8c;
-      border-color: #6fdc8c;
+      color: #2575fc;
+      border-color: #2575fc;
     }
     html[data-bs-theme="dark"] .file-upload-btn:hover {
-      background: #6fdc8c;
+      background: #2575fc;
       color: #23272b;
     }
     html[data-bs-theme="dark"] .btn-primary-custom {
-      background-color: #6fdc8c;
+      background-color: #2575fc;
       color: #23272b;
-      border-color: #6fdc8c;
+      border-color: #2575fc;
+    }
+        html[data-bs-theme="dark"] #camara {
+      background-color: #23272b;
     }
     html[data-bs-theme="dark"] .btn-primary-custom:hover {
-      background-color: #4bbf73;
+      background-color: #2575fc;
       color: #fff;
     }
     html[data-bs-theme="dark"] .btn-outline-primary-custom {
-      border-color: #6fdc8c;
-      color: #6fdc8c;
+      border-color: #2575fc;
+      color: #2575fc;
     }
     html[data-bs-theme="dark"] .btn-outline-primary-custom:hover {
-      background-color: #6fdc8c;
+      background-color: #2575fc;
       color: #23272b;
     }
     html[data-bs-theme="dark"] .form-label, html[data-bs-theme="dark"] label {

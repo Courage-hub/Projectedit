@@ -93,7 +93,7 @@ if (isset($_GET['id'])) {
 
   // Cerrar el recurso de consulta
   odbc_free_result($result);
-  // No cierres la conexión manualmente
+
 }
 ?>
 <!DOCTYPE html>
@@ -118,6 +118,56 @@ if (isset($_GET['id'])) {
   <link href="summernote-0.8.18-dist/summernote.min.css" rel="stylesheet">
   <script src="summernote-0.8.18-dist/summernote.min.js"></script>
   <style>
+    @font-face {
+      font-family: "Poppins";
+      src: url("assets/fonts/poppins/Poppins-Regular.woff2") format("woff2"),
+        url("assets/fonts/poppins/Poppins-Regular.woff") format("woff"),
+        url("assets/fonts/poppins/Poppins-Regular.ttf") format("truetype");
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 300;
+      src: url('assets/fonts/poppins/Poppins-Light.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 400;
+      src: url('assets/fonts/poppins/Poppins-Regular.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 500;
+      src: url('assets/fonts/poppins/Poppins-Medium.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 600;
+      src: url('assets/fonts/poppins/Poppins-SemiBold.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 700;
+      src: url('assets/fonts/poppins/Poppins-Bold.ttf') format('truetype');
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--light-color);
+      color: #333;
+    }
+
     html[data-bs-theme="dark"] body,
     html[data-bs-theme="dark"] .bg-light {
       background-color: #1a1a1a !important;

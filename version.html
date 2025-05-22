@@ -3,11 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ERROR</title>
+    <title>Version Obsolete</title>
+    <!-- Bootstrap CSS -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: "Poppins";
+            src: url("assets/fonts/poppins/Poppins-Regular.woff2") format("woff2"),
+                url("assets/fonts/poppins/Poppins-Regular.woff") format("woff"),
+                url("assets/fonts/poppins/Poppins-Regular.ttf") format("truetype");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #d9534f;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            color: #5a5a5a;
+            margin-bottom: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <center><h1>This web version is obsolete</h1></center>
-    <center><h2>Please use the latest version of the app</h2></center>
-    <center><button><a href="/EDIT/esvlc.edit.html">Home</a></button></center>
+    <div class="container">
+        <h1>This Web Version is Obsolete</h1>
+        <h2>Please use the latest version of the app</h2>
+        <a href="/EDIT/esvlc.edit.html" class="btn">Go to Home</a>
+    </div>
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
